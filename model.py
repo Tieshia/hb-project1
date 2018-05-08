@@ -31,6 +31,17 @@ class FoodType(db.Model):
     food_type = db.Column(db.String(64))
 
 
+class Recipe(db.Model):
+    """Recipe type."""
+
+    __tablename__ = "recipes"
+
+    recipe_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    recipe_name = db.Column(db.String(64))
+    url = db.Column(db.String(200), nullable=True)
+    image_url = db.Column(db.String(200), nullable=True)
+
+
 class Ingredient(db.Model):
     """Ingredients for recipes."""
 
@@ -52,8 +63,13 @@ class StoredIngredient(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     added_at = db.Column(db.DateTime)
 
-    ingredient = db.relationship(ENTER RELATIONSHIP HERE)
-    user = db.relationship(ENTER RELATIONSHIP HERE)
+    ingredient = db.relationship('Ingredient', backref='stored_ingredients')
+    user = db.relationship('User', backref='users')
+
+
+
+
+
 
 
 ##############################################################################
