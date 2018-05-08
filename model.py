@@ -67,8 +67,24 @@ class StoredIngredient(db.Model):
     user = db.relationship('User', backref='users')
 
 
+class CookedRecipes(db.Model):
+    """Log of recipes cooked."""
+
+    __tablename__ = "cooked_recipes"
+
+    log_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    added_at = db.Column(db.DateTime)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+
+    recipe = db.relationship('Recipe', backref='cooked_recipes')
+    user_id = db.Column('User', backref='users')
 
 
+class Scores(db.Model):
+    """User scores for recipes."""
+
+    
 
 
 
