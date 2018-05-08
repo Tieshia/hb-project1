@@ -50,6 +50,10 @@ class StoredIngredient(db.Model):
 
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.ingredient_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    added_at = db.Column(db.DateTime)
+
+    ingredient = db.relationship(ENTER RELATIONSHIP HERE)
+    user = db.relationship(ENTER RELATIONSHIP HERE)
 
 
 ##############################################################################
