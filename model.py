@@ -22,6 +22,12 @@ class User(db.Model):
     email = db.Column(db.String(64))
     password = db.Column(db.String(64))
 
+    def __repr__(self):
+        """String representation of user object."""
+
+        return "<id={} name={} email={}>".format( self.user_id,
+            self.name, self.email)
+
 class FoodType(db.Model):
     """ Food group ingredient belongs in."""
 
@@ -29,6 +35,11 @@ class FoodType(db.Model):
 
     type_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     food_type = db.Column(db.String(64))
+
+    def __repr__(self):
+        """String representation of food type object."""
+
+        return "<id={} type={}>".format(self.type_id, self.food_type)
 
 
 class Recipe(db.Model):
@@ -41,6 +52,12 @@ class Recipe(db.Model):
     url = db.Column(db.String(200), nullable=True)
     image_url = db.Column(db.String(200), nullable=True)
 
+    def __repr__(self):
+        """String representation of recipe."""
+
+        return "<id={} recipe={} url={}>".format(self.recipe_id,
+            self. recipe_name, self. url)
+
 
 class Ingredient(db.Model):
     """Ingredients for recipes."""
@@ -51,7 +68,13 @@ class Ingredient(db.Model):
     ingredient_name = db.Column(db.String(64))
     type_id = db.Column(db.Integer, db.ForeignKey('food_types.type_id'))
 
-    food_type = db.relationship('FoodType', backref='ingredients')
+    food_types = db.relationship('FoodType', backref='ingredients')
+
+    def __repr__(self):
+        """String representation of ingrdient."""
+
+        return "<id={} ingredient={} type_id={}>".format(self.ingredient_id,
+            self.ingredient_name, self.type_id)
 
 
 class StoredIngredient(db.Model):
@@ -63,11 +86,17 @@ class StoredIngredient(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     added_at = db.Column(db.DateTime)
 
-    ingredient = db.relationship('Ingredient', backref='stored_ingredients')
-    user = db.relationship('User', backref='users')
+    ingredients = db.relationship('Ingredient', backref='stored_ingredients')
+    users = db.relationship('User', backref='stored_ingredients')
+
+    def __repr__(self):
+        """String representation of a stored ingredient."""
+
+        return "<id={} user_id={} added_at={}".format(self.ingredient_id,
+            self.user_id, self.added_at)
 
 
-class CookedRecipes(db.Model):
+class CookedRecipe(db.Model):
     """Log of recipes cooked."""
 
     __tablename__ = "cooked_recipes"
@@ -77,15 +106,36 @@ class CookedRecipes(db.Model):
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
 
-    recipe = db.relationship('Recipe', backref='cooked_recipes')
-    user_id = db.Column('User', backref='users')
+    recipes = db.relationship('Recipe', backref='cooked_recipes')
+    users = db.Column('User', backref='cooked_recipes')
+
+    def __repr__(self):
+        """String representation of a recipes cooked."""
+
+        return "<id={} added_at={} recipe_id={} user_id={}>".format(self.log_id,
+            self.added_at self.recipe_id, self.user_id)
 
 
-class Scores(db.Model):
+class Score(db.Model):
     """User scores for recipes."""
 
-    
+    __tablename__ = "scores"
 
+    score_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    rated_at = db.Column(db.DateTime)
+    effort_score = db.Column(db.Integer)
+    taste_score = db.Column(db.Integer)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
+
+    recipes = db.relationship('Recipe', backref='scores')
+
+
+    def __repr__(self):
+        """String representation of user score."""
+
+        return "<id={} rated_at={} effort={} taste={} recipe_id={}>".format(
+            self.score_id, self.rated_at, self.effort_score, self.taste_score,
+            self.recipe_id)
 
 
 ##############################################################################
