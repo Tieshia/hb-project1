@@ -95,6 +95,11 @@ def show_user_profile():
     # render profile template
 
 
+@app.route('/add-ingredient', methods=['POST'])
+
+@app.route('/recipe-made', methods=['POST'])
+
+
 @app.route('/plan-meal', methods=['GET'])
 def get_ingredients():
     """ Get user specified ingredients and show possible meals."""
@@ -138,9 +143,6 @@ def update_score():
         # update in database
     # Else
         # Add new score row to database
-
-# If user adds new ingredient, where would that functionality go?
-# Where would user check that recipe has been made?
 
 
 ################################################################################
