@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<form action='/user-profile'>
+    Please add ingredient items here:
+    <input type="text" name="ingredient">
+    <form>
+        <select name="foodtype">
+            {% for ITEM in FOODTYPE_LIST %}
+            <option value="{{ ITEM }}"> {{ ITEM }} </option>
+            {% endfor %}
+        </select>
+    </form>
+</form>
+{% endblock %}

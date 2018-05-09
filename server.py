@@ -30,8 +30,14 @@ def index():
 @app.route('/login', methods=['GET'])
 def login():
     """Get info from login page."""
-    
+
     return render_template("login.html")
+
+@app.route('/register', methods=['GET'])
+def register():
+    """Get info from registration page."""
+
+    return render_template("register.html")
 
 
 
