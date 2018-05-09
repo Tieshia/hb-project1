@@ -68,7 +68,7 @@ class Ingredient(db.Model):
     ingredient_name = db.Column(db.String(64))
     type_id = db.Column(db.Integer, db.ForeignKey('food_types.type_id'))
 
-    food_types = db.relationship('FoodType', backref='ingredients')
+    food_type = db.relationship('FoodType', backref='ingredients')
 
     def __repr__(self):
         """String representation of ingrdient."""
@@ -87,8 +87,8 @@ class StoredIngredient(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     added_at = db.Column(db.DateTime)
 
-    ingredients = db.relationship('Ingredient', backref='stored_ingredients')
-    users = db.relationship('User', backref='stored_ingredients')
+    ingredient = db.relationship('Ingredient', backref='stored_ingredients')
+    user = db.relationship('User', backref='stored_ingredients')
 
     def __repr__(self):
         """String representation of a stored ingredient."""
@@ -97,23 +97,21 @@ class StoredIngredient(db.Model):
             self.user_id, self.added_at)
 
 
-class CookedRecipe(db.Model):
+class UserRecipe(db.Model):
     """Log of recipes cooked."""
 
-    __tablename__ = "cooked_recipes"
+    __tablename__ = "user_recipes"
 
-    cooked_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    added_at = db.Column(db.DateTime)
+    ur_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    times_cooked = db.Column(db.Integer)
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-
-    recipes = db.relationship('Recipe', backref='cooked_recipes')
-    users = db.relationship('User', backref='cooked_recipes')
+    active = db.Column(db.Boolean)
 
     def __repr__(self):
         """String representation of a recipes cooked."""
 
-        return "<id={} added_at={} recipe_id={} user_id={}>".format(self.cooked_id,
+        return "<id={} added_at={} recipe_id={} user_id={}>".format(self.ur_id,
             self.added_at, self.recipe_id, self.user_id)
 
 
@@ -143,6 +141,14 @@ class Score(db.Model):
 ##############################################################################
 # Helper functions
 
+def init_app():
+    # So that we can use Flask-SQLAlchemy, we'll make a Flask app.
+    from flask import Flask
+    app = Flask(__name__)
+
+    connect_to_db(app)
+    print "Connected to DB."
+
 def connect_to_db(app):
     """Connect the database to our Flask app."""
 
@@ -157,6 +163,8 @@ if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
     # you in a state of being able to work with the database directly.
 
-    from server import app
-    connect_to_db(app)
-    print "Connected to DB."
+    # from server import app
+    # connect_to_db(app)
+    # print "Connected to DB."
+
+    init_app()
