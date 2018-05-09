@@ -111,8 +111,8 @@ class UserRecipe(db.Model):
     def __repr__(self):
         """String representation of a recipes cooked."""
 
-        return "<id={} added_at={} recipe_id={} user_id={}>".format(self.ur_id,
-            self.added_at, self.recipe_id, self.user_id)
+        return "<id={} times_cooked={} recipe_id={} user_id={} active={}>".format(self.ur_id,
+            self.times_cooked, self.recipe_id, self.user_id, self.active)
 
 
 class Score(db.Model):

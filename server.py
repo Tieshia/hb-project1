@@ -37,11 +37,12 @@ def login():
 @app.route('/login', methods=['POST'])
 def verify_credentials():
     """Verifies user credentials"""
+    pass
 
     # Takes in email and password
     # if email exists:
         # if password matches:
-            # redirect to user profile
+            # redirect to user profile and add user to session
         # else redirect and flash invalid
     # else redirect and flash invalid
 
@@ -55,16 +56,19 @@ def register():
 @app.route('/register', methods=['POST'])
 def add_new_user():
     """Add user to database."""
+    pass
 
     # Take user info
     # If email already in system:
         # Flash invalid email and redirect to login
     # else create user and add to database
+        # add user to session
         # redirect to initial profile setup
 
 @app.route('/create-profile', methods=['GET'])
 def create-profile():
     """ Initializes user preferences."""
+    pass
 
     # render create profile template
 
@@ -72,6 +76,7 @@ def create-profile():
 @app.route('/create-profile', methods=['POST'])
 def update_stored_ingredients():
     """ adds stored ingredients to database."""
+    pass
 
     # get ingredients
     # create store_ingredients
@@ -82,15 +87,18 @@ def update_stored_ingredients():
 @app.route('/user-profile')
 def show_user_profile():
     """Renders profile information for specific user."""
+    pass
 
     # get user from session
     # pull up stored_ingredients and pass into template
+    # pull up active revipes on user_recipes and pass into template 
     # render profile template
 
 
 @app.route('/plan-meal', methods=['GET'])
 def get_ingredients():
     """ Get user specified ingredients and show possible meals."""
+    pass
 
     # return template for ingredient items; add meal preferences here as well?
 
@@ -98,13 +106,41 @@ def get_ingredients():
 @app.route('/plan-meal', methods=['POST'])
 def show_meals():
     """ Pass ingredients into spoonacular API and show meal results."""
+    pass
 
     # get ingredients from meal plan
     # pass into spoonacular api
     # pass results into meal plan template and render 
 
 
+@app.route('/scores')
+def show_score():
+    """Show all scores for user in session."""
+    pass
 
+    # Get user from session and pass their scores into render template
+
+
+@app.route('/score-recipe/<int: recipe_id>', methods=['GET'])
+def get_score():
+    """show form to have user update score."""
+    pass
+
+    # render template for scoring recipe
+
+
+@app.route('/score-recipe/<int: recipe_id>', methods=['POST'])
+def update_score():
+    """Adds/updates user score for recipe."""
+    pass
+
+    # If user score for recipe already exists:
+        # update in database
+    # Else
+        # Add new score row to database
+
+# If user adds new ingredient, where would that functionality go?
+# Where would user check that recipe has been made?
 
 
 ################################################################################
