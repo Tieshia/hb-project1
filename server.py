@@ -138,6 +138,10 @@ def show_meals():
     
     # pass results into meal plan template and render 
 
+    # reference for saving json result 
+    # with open('spoonacular.txt', 'w') as outfile:
+    #      json.dump(r.json(), outfile)
+
 
 @app.route('/scores')
 def show_score():
