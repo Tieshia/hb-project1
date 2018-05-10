@@ -1,6 +1,7 @@
 """ Meal Planning"""
 
 import os
+import requests
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, request, flash, redirect, session
@@ -95,9 +96,15 @@ def show_user_profile():
     # render profile template
 
 
-@app.route('/add-ingredient', methods=['POST'])
+@app.route('/update-ingredients', methods=['POST'])
+def update_ingredients():
+    """ Update stored_ingredients."""
+    pass
 
 @app.route('/recipe-made', methods=['POST'])
+def mark_recipe():
+    """Change user_recipe to inactive and increment times_counted."""
+    pass
 
 
 @app.route('/plan-meal', methods=['GET'])
@@ -111,10 +118,24 @@ def get_ingredients():
 @app.route('/plan-meal', methods=['POST'])
 def show_meals():
     """ Pass ingredients into spoonacular API and show meal results."""
-    pass
+    
+    headers = {"X-Mashape-Key": (os.environ['SPOONACULAR_SECRET_KEY']),
+    "X-Mashape-Host": "spoonacular-recipe-food-nutrition-v1.p.mashape.com"}
 
     # get ingredients from meal plan
+    ranking = request.form.get("ranking")
+    number = request.form.get("number")
+    ingredients = request.form.get("ingredients")
+    ingredients = ','.join(ingredients)
+    
+    params = {"ranking": ranking,
+    "number": number,
+    "ingredients": ingredients}
+
     # pass into spoonacular api
+    r = requests.get('https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients',
+        params=payload, headers=headers)
+    
     # pass results into meal plan template and render 
 
 
