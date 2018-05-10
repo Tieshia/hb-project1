@@ -11,7 +11,7 @@ def load_food_type():
 
     food_groups = ['Dairy and Egg Products', 'Spices and Herbs', 'Fats and Oils',
         'Proteins', 'Soups, Sauces, and Gravies', 'Produce', 'Nuts and Seeds', 
-        'Grains and Pasta']
+        'Grains and Pasta', 'Miscellaneous', 'Unknown']
 
     for item in food_groups:
         food_group = FoodType(food_type=item)

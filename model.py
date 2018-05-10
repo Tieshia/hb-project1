@@ -28,6 +28,7 @@ class User(db.Model):
         return "<id={} name={} email={}>".format( self.user_id,
             self.name, self.email)
 
+
 class FoodType(db.Model):
     """ Food group ingredient belongs in."""
 
@@ -136,6 +137,30 @@ class Score(db.Model):
         return "<id={} rated_at={} effort={} taste={} recipe_id={}>".format(
             self.score_id, self.rated_at, self.effort_score, self.taste_score,
             self.recipe_id)
+
+
+def example_data():
+    """Create some sample data."""
+
+    # In case this is run more than once, empty out existing data.
+    User.query.delete()
+    FoodType.query.delete()
+
+    # Add sample data
+    # Users
+    u1 = User(name="Tieshia", email="francistie@gmail.com", password="test")
+    u2 = User(name="Jane", email="jhacks@gmail.com", password="test")
+
+    # FoodType
+    ft1 = FoodType(food_type='Unknown')
+    ft2 = FoodType(food_type='Produce')
+
+    db.session.add_all([u1, u2, ft1, ft2])
+    db.session.commit()
+
+
+
+    
 
 
 ##############################################################################

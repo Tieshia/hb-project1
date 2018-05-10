@@ -115,6 +115,15 @@ def get_ingredients():
     # return template for ingredient items; add meal preferences here as well?
 
 
+def get_recipes(params, headers):
+    """Show meal results from spoonacular."""
+
+    # pass into spoonacular api
+    r = requests.get('https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients',
+        params=payload, headers=headers)
+    return r.json()
+
+
 @app.route('/plan-meal', methods=['POST'])
 def show_meals():
     """ Pass ingredients into spoonacular API and show meal results."""
@@ -132,16 +141,9 @@ def show_meals():
     "number": number,
     "ingredients": ingredients}
 
-    # pass into spoonacular api
-    r = requests.get('https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients',
-        params=payload, headers=headers)
-    
-    # pass results into meal plan template and render 
+    r = get_recipes(headers, params)
 
-    # reference for saving json result 
-    # with open('spoonacular.txt', 'w') as outfile:
-    #      json.dump(r.json(), outfile)
-
+    return render_template('meals.html')
 
 @app.route('/scores')
 def show_score():
