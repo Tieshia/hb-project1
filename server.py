@@ -22,14 +22,14 @@ app.jinja_env.undefined = StrictUndefined
 
 
 @app.route('/')
-def index():
+def index(): # -- TESTED
     """Homepage."""
 
     return render_template("homepage.html")
 
 
 @app.route('/login', methods=['GET'])
-def login():
+def login(): # -- TESTED
     """Get info from login page."""
 
     return render_template("login.html")

@@ -31,3 +31,10 @@ class FlaskTestsBasic(TestCase):
         result = self.client.get('/login')
         self.assertIn('Log In', result.data)
         self.assertNotIn('Register', result.data)
+
+
+    def test_register(self):
+        """Test register page."""
+        result = self.client.get('/register')
+        self.assertIn('Register', result.data)
+        self.assertNotIn('Log In', result.data)
