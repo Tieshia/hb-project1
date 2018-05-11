@@ -40,6 +40,8 @@ def verify_credentials():
     """Verifies user credentials"""
     pass
 
+    #  TEST DB
+
     # Takes in email and password
     # if email exists:
         # if password matches:
@@ -58,6 +60,8 @@ def register():
 def add_new_user():
     """Add user to database."""
     pass
+
+    # TEST DB
 
     # Take user info
     # If email already in system:
@@ -79,6 +83,8 @@ def update_stored_ingredients():
     """ adds stored ingredients to database."""
     pass
 
+    # TEST DB
+
     # get ingredients
     # create store_ingredients
     # add to database
@@ -89,6 +95,8 @@ def update_stored_ingredients():
 def show_user_profile():
     """Renders profile information for specific user."""
     pass
+
+    # TEST DB
 
     # get user from session
     # pull up stored_ingredients and pass into template
@@ -101,10 +109,14 @@ def update_ingredients():
     """ Update stored_ingredients."""
     pass
 
+    # TEST DB
+
 @app.route('/recipe-made', methods=['POST'])
 def mark_recipe():
     """Change user_recipe to inactive and increment times_counted."""
     pass
+
+    # TEST DB
 
 
 @app.route('/plan-meal', methods=['GET'])
@@ -139,10 +151,19 @@ def show_meals():
 
     return render_template('meal-plan.html', results=r)
 
+@app.route('/check-meal', methods=['POST'])
+def add_meal_to_plan():
+    """Pass selected meals into UserRecipes."""
+
+    # TEST DB
+
+
 @app.route('/scores')
 def show_score():
     """Show all scores for user in session."""
     pass
+
+    # TEST DB
 
     # Get user from session and pass their scores into render template
 
@@ -159,6 +180,8 @@ def get_score():
 def update_score():
     """Adds/updates user score for recipe."""
     pass
+
+    # TEST DB 
 
     # If user score for recipe already exists:
         # update in database
