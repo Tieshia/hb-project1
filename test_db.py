@@ -50,3 +50,15 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn('Invalid credentials', result.data)
         self.assertIn('Log In', result.data)
         self.assertNotIn('User Profile', result.data)
+
+
+    def test_check_login_wrong_email(self):
+        """Test login page w/ incorrect email."""
+
+        result = self.client.post('/login',
+                            data={'email': 'test@gmail.com',
+                            'password': 'test'},
+                            follow_redirects=True)
+        self.assertIn('Invalid credentials', result.data)
+        self.assertIn('Log In', result.data)
+        self.assertNotIn('User Profile', result.data)
