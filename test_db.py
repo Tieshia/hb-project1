@@ -75,4 +75,19 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn('Set Up', result.data)
         self.assertIn('name="ingredient1"', result.data)
         self.assertNotIn('Invalid credentials', result.data)
+        self.assertNotIn('Register', result.data)
         self.assertIsNotNone(User.query.filter_by(email='sdevelops@gmail.com').first())
+
+
+    def test_registration_existing_user(self):
+        """Test adding existing user from register page."""
+
+        result = self.client.post('/register',
+                            data={'name': 'Jane',
+                            'email': 'jhacks@gmail.com',
+                            'password': 'test'},
+                            follow_redirects=True)
+        self.assertNotIn('Set Up', result.data)
+        self.assertIn('Invalid', result.data)
+        self.assertIn('Register', result.data)
+        self.assertTrue(len(User.query.filter_by(name='Jane').all()) == 1)
