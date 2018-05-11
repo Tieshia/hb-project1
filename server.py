@@ -8,7 +8,7 @@ from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 
 from model import (connect_to_db, db, User, FoodType, Recipe, Ingredient, 
-    StoredIngredient, CookedRecipe, Score)
+    StoredIngredient, UserRecipe, Score)
 
 
 app = Flask(__name__)
@@ -67,7 +67,7 @@ def add_new_user():
         # redirect to initial profile setup
 
 @app.route('/create-profile', methods=['GET'])
-def create-profile():
+def create_profile():
     """ Initializes user preferences."""
     pass
 
@@ -115,35 +115,29 @@ def get_ingredients():
     # return template for ingredient items; add meal preferences here as well?
 
 
-def get_recipes(params, headers):
-    """Show meal results from spoonacular."""
+def get_recipes(params):
+    """Get meal results from spoonacular."""
 
-    # pass into spoonacular api
-    r = requests.get('https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients',
-        params=payload, headers=headers)
+    # pass into EDAMAM api
+    r = requests.get(requests.get("https://api.edamam.com/search", 
+        params=payload))
     return r.json()
 
 
 @app.route('/plan-meal', methods=['POST'])
 def show_meals():
-    """ Pass ingredients into spoonacular API and show meal results."""
+    """ Pass ingredients into edamam API and show meal results."""
     
-    headers = {"X-Mashape-Key": (os.environ['SPOONACULAR_SECRET_KEY']),
-    "X-Mashape-Host": "spoonacular-recipe-food-nutrition-v1.p.mashape.com"}
-
     # get ingredients from meal plan
-    ranking = request.form.get("ranking")
-    number = request.form.get("number")
     ingredients = request.form.get("ingredients")
     ingredients = ','.join(ingredients)
     
-    params = {"ranking": ranking,
-    "number": number,
+    params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
+    "app_key": os.environ['EDAMAM_SECRET_KEY'],
     "ingredients": ingredients}
+    r = get_recipes(params)
 
-    r = get_recipes(headers, params)
-
-    return render_template('meals.html')
+    return render_template('meal-plan.html', results=r)
 
 @app.route('/scores')
 def show_score():
@@ -153,7 +147,7 @@ def show_score():
     # Get user from session and pass their scores into render template
 
 
-@app.route('/score-recipe/<int: recipe_id>', methods=['GET'])
+@app.route('/score-recipe/<int:recipe_id>', methods=['GET'])
 def get_score():
     """show form to have user update score."""
     pass
@@ -161,7 +155,7 @@ def get_score():
     # render template for scoring recipe
 
 
-@app.route('/score-recipe/<int: recipe_id>', methods=['POST'])
+@app.route('/score-recipe/<int:recipe_id>', methods=['POST'])
 def update_score():
     """Adds/updates user score for recipe."""
     pass

@@ -2,4 +2,11 @@
 
 {% block title %}Meal Plan{% endblock %}
 {% block content %}
+<h1>Meals</h1>
+{% for item in results %}
+<div class='recipe-div'>
+    <h3>{{ item['recipe']['label'] }}</h3>
+    <img src="{{ item['recipe']['image'] }}" href="{{ item['recipe']['url'] }}">
+</div>
+{% endfor %}
 {% endblock %}

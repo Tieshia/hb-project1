@@ -30,7 +30,7 @@ class MockFlaskTests(TestCase):
             """Makes mock API return result."""
             with open('edamam.txt') as json_file:
                 data = json.load(json_file)
-            return data['hits'] 
+            return data['hits']
 
         server.get_recipes = _mock_get_recipes
 
@@ -48,6 +48,9 @@ class MockFlaskTests(TestCase):
                                                     'ingredients': 'chicken,broccoli'})
 
         self.assertIn('Chicken Broccoli Divan', result.data)
+        self.assertIn('http://www.thekitchn.com/recipe-chicken-broccoli-alfredo-229203', 
+            result.data)
+        self.assertNotIn('Apple Fritter', result.data)
 
 
 if __name__ == "__main__":
