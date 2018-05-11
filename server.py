@@ -38,16 +38,28 @@ def login():
 @app.route('/login', methods=['POST'])
 def verify_credentials():
     """Verifies user credentials"""
-    pass
-
-    #  TEST DB
 
     # Takes in email and password
+    email = request.form.get('email')
+    password = request.form.get('password')
     # if email exists:
+    check_user = User.query.filter_by(email=email).first()
+
+    if check_user:
         # if password matches:
+        if check_user.password == password:
             # redirect to user profile and add user to session
+            session['user'] = check_user.user_id
+            return render_template('profile.html', user=check_user)
         # else redirect and flash invalid
+        else:
+            flash('Invalid credentials.')
+            return redirect('/login')
     # else redirect and flash invalid
+    else:
+        flash('Invalid credentials')
+        return redirect('/login')
+
 
 @app.route('/register', methods=['GET'])
 def register():
