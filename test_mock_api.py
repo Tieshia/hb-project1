@@ -50,6 +50,8 @@ class MockFlaskTests(TestCase):
         self.assertIn('Chicken Broccoli Divan', result.data)
         self.assertIn('http://www.thekitchn.com/recipe-chicken-broccoli-alfredo-229203', 
             result.data)
+        self.assertIn('<img', result.data)
+        self.assertIn('<h3>', result.data)
         self.assertNotIn('Apple Fritter', result.data)
 
 
