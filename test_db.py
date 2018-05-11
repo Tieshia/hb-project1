@@ -29,10 +29,24 @@ class FlaskTestsDatabase(TestCase):
 
 
     def test_check_login(self):
-        """Test login page."""
+        """Test login page w/ correct credentials."""
 
         result = self.client.post("/login",
                                 data={'email': "jhacks@gmail.com",
                                 'password': 'test'},
                                 follow_redirects=True)
         self.assertIn('User Profile', result.data)
+        self.assertIn('Welcome back', result.data)
+        self.assertNotIn('Invalid credentials', result.data)
+
+
+    def test_check_login_wrong_password(self):
+        """Test login page w/ incorrect password."""
+
+        result = self.client.post("/login",
+                                data={'email': "jhacks@gmail.com",
+                                'password': 'test?'},
+                                follow_redirects=True)
+        self.assertIn('Invalid credentials', result.data)
+        self.assertIn('Log In', result.data)
+        self.assertNotIn('User Profile', result.data)

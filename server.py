@@ -50,7 +50,8 @@ def verify_credentials():
         if check_user.password == password:
             # redirect to user profile and add user to session
             session['user'] = check_user.user_id
-            return render_template('profile.html', user=check_user)
+            flash('Welcome back!')
+            return render_template('profile.html')
         # else redirect and flash invalid
         else:
             flash('Invalid credentials.')
