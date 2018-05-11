@@ -73,7 +73,7 @@ def register():
 def add_new_user():
     """Add user to database."""
 
-    # TEST DB
+    # TEST DB -- DONE
 
     # Take user info
     name = request.form.get('name')
