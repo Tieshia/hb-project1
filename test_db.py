@@ -1,5 +1,5 @@
 from unittest import TestCase
-from model import connect_to_db, db, example_data
+from model import User, connect_to_db, db, example_data
 from server import app
 from flask import session
 
@@ -62,3 +62,17 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn('Invalid credentials', result.data)
         self.assertIn('Log In', result.data)
         self.assertNotIn('User Profile', result.data)
+
+
+    def test_registration_new_user(self):
+        """Test adding new user from register page."""
+
+        result = self.client.post('/register', 
+                            data={'name': 'Sarah',
+                            'email': 'sdevelops@gmail.com',
+                            'password': 'test'},
+                            follow_redirects=True)
+        self.assertIn('Set Up', result.data)
+        self.assertIn('name="ingredient1"', result.data)
+        self.assertNotIn('Invalid credentials', result.data)
+        self.assertIsNotNone(User.query.filter_by(email='sdevelops@gmail.com').first())

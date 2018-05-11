@@ -38,7 +38,7 @@ def login():
 @app.route('/login', methods=['POST'])
 def verify_credentials():
     """Verifies user credentials"""
-
+    # TEST DB -- DONE
     # Takes in email and password
     email = request.form.get('email')
     password = request.form.get('password')
@@ -72,16 +72,29 @@ def register():
 @app.route('/register', methods=['POST'])
 def add_new_user():
     """Add user to database."""
-    pass
 
     # TEST DB
 
     # Take user info
+    name = request.form.get('name')
+    email = request.form.get('email')
+    password = request.form.get('password')
     # If email already in system:
+    check_user = User.query.filter_by(email=email).first()
+
+    if check_user:
         # Flash invalid email and redirect to login
+        flash('Invalid credentials')
+        return redirect('/register')
     # else create user and add to database
+    else:
+        new_user = User(name=name, email=email, password=password)
+        db.session.add(new_user)
+        db.session.commit()
         # add user to session
+        session['user'] = new_user.user_id
         # redirect to initial profile setup
+        return render_template('profile-setup.html')
 
 @app.route('/create-profile', methods=['GET'])
 def create_profile():
