@@ -35,6 +35,14 @@ class FlaskTestsBasic(TestCase):
 
     def test_register(self):
         """Test register page."""
+        
         result = self.client.get('/register')
         self.assertIn('Register', result.data)
         self.assertNotIn('Log In', result.data)
+
+
+    def test_create_profile(self):
+        """Test create profile route."""
+
+        result = self.client.get('/create-profile')
+        self.assertIn('Set Up', result.data)

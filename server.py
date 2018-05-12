@@ -99,9 +99,9 @@ def add_new_user():
 @app.route('/create-profile', methods=['GET'])
 def create_profile():
     """ Initializes user preferences."""
-    pass
 
     # render create profile template
+    return render_template('profile-setup.html')
 
 
 @app.route('/create-profile', methods=['POST'])
