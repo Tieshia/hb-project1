@@ -138,6 +138,16 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
         self.assertNotIn('Fritter', result.data)
 
 
+    def test_user_profile(self):
+        """Test actually loading user ingredients in db from session id."""
+
+        result = self.client.get('/user-profile')
+
+        self.assertIn('User Profile', result.data)
+        self.assertIn('Produce', result.data)
+        self.assertNotIn('Fritter', result.data)
+
+
 if __name__ == "__main__":
     import unittest
 
