@@ -145,7 +145,7 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
 
         self.assertIn('User Profile', result.data)
         self.assertIn('Produce', result.data)
-        self.assertNotIn('Fritter', result.data)
+        self.assertNotIn('chicken', result.data)
 
 
 if __name__ == "__main__":
