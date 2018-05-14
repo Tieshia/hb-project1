@@ -53,8 +53,7 @@ def verify_credentials():
             # redirect to user profile and add user to session
             session['user'] = check_user.user_id
             flash('Welcome back!')
-            return render_template('profile.html', 
-                ingredients=StoredIngredient.query.filter_by(user_id=check_user.user_id).all())
+            return redirect('/user-profile')
         # else redirect and flash invalid
         else:
             flash('Invalid credentials.')
@@ -76,7 +75,7 @@ def register():
 def add_new_user():
     """Add user to database."""
 
-    # TEST DB -- DONE
+    # TEST DB -- TESTED
 
     # Take user info
     name = request.form.get('name')
@@ -148,7 +147,7 @@ def update_stored_ingredients():
 def show_user_profile():
     """Renders profile information for specific user."""
 
-    # TEST DB
+    # TEST DB -- TESTED
 
     # get user from session
     user_id = session['user']
@@ -162,9 +161,32 @@ def show_user_profile():
 @app.route('/update-ingredients', methods=['POST'])
 def update_ingredients():
     """ Update stored_ingredients."""
-    pass
 
     # TEST DB
+
+    ingredients = request.form.get('ingredients')
+    ingredients = ingredients.split(',')
+    types = request.form.get('types')
+    types = types.split(',')
+
+    for i in range(len(ingredients)):
+        if Ingredient.query.filter_by(ingredient_name=ingredients[i]).first() is None:
+            food_type = FoodType.query.filter_by(food_type=types[i]).one()
+            new_ingredient = Ingredient(ingredient_name=ingredients[i], 
+                type_id=food_type.type_id)
+            db.session.add(new_ingredient)
+            db.session.commit()
+        else:
+            new_ingredient = Ingredient.query.filter_by(ingredient_name=ingredients[i]).first()
+        new_user_ingredient = StoredIngredient(ingredient_id=new_ingredient.ingredient_id,
+                            user_id=session['user'],
+                            added_at=datetime.now())
+        db.session.add(new_user_ingredient)
+        db.session.commit()
+
+    flash('Successfully added!')
+    return redirect('/user-profile')
+
 
 @app.route('/recipe-made', methods=['POST'])
 def mark_recipe():

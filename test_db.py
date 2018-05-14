@@ -1,5 +1,5 @@
 from unittest import TestCase
-from model import User, connect_to_db, db, example_data
+from model import User, Ingredient, connect_to_db, db, example_data
 from server import app
 from seed import load_food_type
 from flask import session
@@ -147,6 +147,21 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
         self.assertIn('Produce', result.data)
         self.assertIn('steak', result.data)
         self.assertNotIn('chicken', result.data)
+
+
+    def test_update_ingredients(self):
+        """Test successfully adding ingredient input from user."""
+
+        result = self.client.post('/update-ingredients',
+                            data={'ingredients': 'spinach',
+                            'types': 'Produce'},
+                            follow_redirects=True)
+        self.assertIn('Successfully added!', result.data)
+        self.assertIn('spinach', result.data)
+        self.assertIn('Produce', result.data)
+        self.assertIsNotNone(Ingredient.query.filter_by(ingredient_name='spinach').first())
+        self.assertTrue(len(Ingredient.query.filter_by(ingredient_name='spinach').all()) == 1)
+
 
 
 if __name__ == "__main__":
