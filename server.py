@@ -98,6 +98,7 @@ def add_new_user():
         # redirect to initial profile setup
         return render_template('profile-setup.html')
 
+
 @app.route('/create-profile', methods=['GET'])
 def create_profile(): # -- TESTED
     """ Initializes user preferences."""
@@ -158,11 +159,11 @@ def show_user_profile():
     return render_template('profile.html', ingredients=user_ingredients)
 
 
-@app.route('/update-ingredients', methods=['POST'])
-def update_ingredients():
-    """ Update stored_ingredients."""
+@app.route('/add-ingredients', methods=['POST'])
+def add_ingredients():
+    """ Add stored_ingredients."""
 
-    # TEST DB
+    # TEST DB -- TESTED
 
     ingredients = request.form.get('ingredients')
     ingredients = ingredients.split(',')
@@ -186,6 +187,30 @@ def update_ingredients():
 
     flash('Successfully added!')
     return redirect('/user-profile')
+
+
+@app.route('/remove-ingredients', methods=['POST'])
+def remove_ingredient():
+    """Remove Stored Ingredient for user."""
+
+    ingredients = request.form.get('ingredients')
+    ingredients = ingredients.split(',')
+
+    for i in range(len(ingredients)):
+        main_ingredient = Ingredient.query.filter_by(ingredient_name=ingredients[i]).first()
+
+        if main_ingredient:
+            del_ingredient = StoredIngredient.query.filter_by(ingredient_id=main_ingredient.ingredient_id).first()
+            if del_ingredient:
+                db.session.delete(del_ingredient)
+                db.session.commit()
+            else:
+                pass
+        else:
+            pass
+    flash('Successfully deleted!')
+    return redirect('/user-profile')
+
 
 
 @app.route('/recipe-made', methods=['POST'])

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from model import User, Ingredient, connect_to_db, db, example_data
+from model import User, Ingredient, StoredIngredient, connect_to_db, db, example_data
 from server import app
 from seed import load_food_type
 from flask import session
@@ -149,10 +149,10 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
         self.assertNotIn('chicken', result.data)
 
 
-    def test_update_ingredients(self):
-        """Test successfully adding ingredient input from user."""
+    def test_add_ingredients(self):
+        """Test successfully adding ingredient input from user ingredients."""
 
-        result = self.client.post('/update-ingredients',
+        result = self.client.post('/add-ingredients',
                             data={'ingredients': 'spinach',
                             'types': 'Produce'},
                             follow_redirects=True)
@@ -161,6 +161,21 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
         self.assertIn('Produce', result.data)
         self.assertIsNotNone(Ingredient.query.filter_by(ingredient_name='spinach').first())
         self.assertTrue(len(Ingredient.query.filter_by(ingredient_name='spinach').all()) == 1)
+
+
+    def test_remove_ingredients(self):
+        """Test successfully removing ingredient input from user ingredients."""
+
+        result = self.client.post('/remove-ingredients',
+                                data={'ingredients': 'steak'},
+                                follow_redirects=True)
+
+        steak = Ingredient.query.filter_by(ingredient_name='steak').first()
+
+        self.assertIn('Successfully deleted!', result.data)
+        self.assertNotIn('steak', result.data)
+        self.assertIsNone(StoredIngredient.query.filter_by(ingredient_id=steak.ingredient_id).first())
+        self.assertIn('User Profile', result.data)
 
 
 
