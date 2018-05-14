@@ -1,6 +1,9 @@
 """Models and database functions for Meal Planning project."""
 
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
+# from seed import load_food_type
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -94,7 +97,7 @@ class StoredIngredient(db.Model):
     def __repr__(self):
         """String representation of a stored ingredient."""
 
-        return "<id={} user_id={} added_at={}".format(self.ingredient_id,
+        return "<id={} user_id={} added_at={}>".format(self.ingredient_id,
             self.user_id, self.added_at)
 
 
@@ -143,19 +146,49 @@ def example_data():
     """Create some sample data."""
 
     # In case this is run more than once, empty out existing data.
-    User.query.delete()
+    Score.query.delete()
+    UserRecipe.query.delete()
+    StoredIngredient.query.delete()
+    Ingredient.query.delete()
+    Recipe.query.delete()
     FoodType.query.delete()
+    User.query.delete()
 
     # Add sample data
     # Users
-    u1 = User(name="Tieshia", email="francistie@gmail.com", password="test")
-    u2 = User(name="Jane", email="jhacks@gmail.com", password="test")
+    tieshia = User(name="Tieshia", email="francistie@gmail.com", password="test")
+    jane = User(name="Jane", email="jhacks@gmail.com", password="test")
 
-    # FoodType
-    ft1 = FoodType(food_type='Unknown')
-    ft2 = FoodType(food_type='Produce')
+    # Food Type
+    protein = FoodType(food_type='Proteins')
+    produce = FoodType(food_type='Produce')
 
-    db.session.add_all([u1, u2, ft1, ft2])
+    db.session.add_all([tieshia, jane, protein, produce])
+    db.session.commit()
+
+    # Recipe
+    recipe1 = Recipe(url='test1.com', image_url='test1_image.com', recipe_name='recipe1')
+    recipe2 = Recipe(url='test2.com', image_url='test2_image.com', recipe_name='recipe2')
+
+
+    # Ingredient
+    steak = Ingredient(type_id=protein.type_id, ingredient_name='steak')
+    broccoli = Ingredient(type_id=produce.type_id, ingredient_name='broccoli')
+
+    db.session.add_all([recipe1, recipe2, steak, broccoli])
+    db.session.commit()
+
+    # User Ingredients
+    user_ing1 = StoredIngredient(user_id=jane.user_id, added_at=datetime.now(), ingredient_id=steak.ingredient_id)
+    user_ing2 = StoredIngredient(user_id=jane.user_id, added_at=datetime.now(), ingredient_id=broccoli.ingredient_id)
+
+    # User Recipes
+    user_rec1 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe1.recipe_id, active=True)
+
+    # Score
+    user_score1 = Score(recipe_id=recipe1.recipe_id, effort_score=1, taste_score=1, user_id=jane.user_id, rated_at=datetime.now())
+
+    db.session.add_all([user_ing1, user_ing2, user_rec1, user_score1])
     db.session.commit()
 
 
@@ -174,7 +207,7 @@ def init_app():
     connect_to_db(app)
     print "Connected to DB."
 
-def connect_to_db(app, db_uri="postgresql:///mealplan"):
+def connect_to_db(app, db_uri="postgresql:///testdb"):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database

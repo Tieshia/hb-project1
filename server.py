@@ -2,6 +2,8 @@
 
 import os
 import requests
+import pdb
+from datetime import datetime
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, request, flash, redirect, session
@@ -51,7 +53,8 @@ def verify_credentials():
             # redirect to user profile and add user to session
             session['user'] = check_user.user_id
             flash('Welcome back!')
-            return render_template('profile.html')
+            return render_template('profile.html', 
+                ingredients=StoredIngredient.query.filter_by(user_id=check_user.user_id).all())
         # else redirect and flash invalid
         else:
             flash('Invalid credentials.')
@@ -97,7 +100,7 @@ def add_new_user():
         return render_template('profile-setup.html')
 
 @app.route('/create-profile', methods=['GET'])
-def create_profile():
+def create_profile(): # -- TESTED
     """ Initializes user preferences."""
 
     # render create profile template
@@ -107,27 +110,53 @@ def create_profile():
 @app.route('/create-profile', methods=['POST'])
 def update_stored_ingredients():
     """ adds stored ingredients to database."""
-    pass
 
-    # TEST DB
+    # TEST DB -- TESTED
 
     # get ingredients
+    ingredients = request.form.get('ingredients')
+    ingredients = ingredients.split(',')
+    types = request.form.get('types')
+    types = types.split(',')
+
     # create store_ingredients
-    # add to database
+    for i in range(len(ingredients)):
+        # If not in ingredients, add to ingredients:
+        if Ingredient.query.filter_by(ingredient_name=(ingredients[i])).first() is None:
+            ing_type = FoodType.query.filter_by(food_type=(types[i])).first()
+            new_ingredient = Ingredient(ingredient_name=(ingredients[i]), type_id=ing_type.type_id)
+            db.session.add(new_ingredient)
+        #else add to database
+        else:
+            pass
+        user_ingredient = Ingredient.query.filter_by(ingredient_name=(ingredients[i])).first()
+        user_ingredient_id = user_ingredient.ingredient_id
+        new_user_ingredient = StoredIngredient(ingredient_id=user_ingredient_id, 
+                                                user_id=session['user'],
+                                                added_at=datetime.now())
+        db.session.add(new_user_ingredient)
+
+    db.session.commit()
+        
+
     # flash successfully added and redirect to user-profile
+    flash('Successfully added!')
+    return redirect('/user-profile')
 
 
 @app.route('/user-profile')
 def show_user_profile():
     """Renders profile information for specific user."""
-    pass
 
     # TEST DB
 
     # get user from session
+    user_id = session['user']
     # pull up stored_ingredients and pass into template
-    # pull up active revipes on user_recipes and pass into template 
+    user_ingredients = StoredIngredient.query.filter_by(user_id=user_id).all()
+    # pull up active recipes on user_recipes and pass into template 
     # render profile template
+    return render_template('profile.html', ingredients=user_ingredients)
 
 
 @app.route('/update-ingredients', methods=['POST'])

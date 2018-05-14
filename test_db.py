@@ -1,6 +1,7 @@
 from unittest import TestCase
 from model import User, connect_to_db, db, example_data
 from server import app
+from seed import load_food_type
 from flask import session
 
 class FlaskTestsDatabase(TestCase):
@@ -73,7 +74,7 @@ class FlaskTestsDatabase(TestCase):
                             'password': 'test'},
                             follow_redirects=True)
         self.assertIn('Set Up', result.data)
-        self.assertIn('name="ingredient1"', result.data)
+        self.assertIn('name="ingredients"', result.data)
         self.assertNotIn('Invalid credentials', result.data)
         self.assertNotIn('Register', result.data)
         self.assertIsNotNone(User.query.filter_by(email='sdevelops@gmail.com').first())
@@ -91,3 +92,54 @@ class FlaskTestsDatabase(TestCase):
         self.assertIn('Invalid', result.data)
         self.assertIn('Register', result.data)
         self.assertTrue(len(User.query.filter_by(name='Jane').all()) == 1)
+
+class FlaskTestsDatabaseLoggedIn(TestCase):
+    """Flask database tests with user logged in to session."""
+
+    def setUp(self):
+        """Stuff to do before every test."""
+
+        # Get the Flask test client
+        self.client = app.test_client()
+        app.config['TESTING'] = True
+        app.config['SECRET_KEY'] = 'key'
+        
+        # Connect to test database
+        connect_to_db(app, "postgresql:///testdb")
+
+        # Create tables and add sample data
+        db.create_all()
+        example_data()
+
+        # Add user to Flask session
+        user = User.query.filter_by(name='Jane').first()
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['user'] = user.user_id
+
+
+    def tearDown(self):
+        """Do at end of every test."""
+
+        db.session.close()
+        db.drop_all()
+
+
+    def test_create_profile(self):
+        """Test adding ingredients to database from set up page."""
+
+        result = self.client.post('/create-profile',
+                            data={'ingredients': 'chicken,broccoli',
+                                'types': 'Proteins,Produce'},
+                            follow_redirects=True)
+        self.assertIn('User Profile', result.data)
+        self.assertIn('broccoli', result.data)
+        self.assertIn('Protein', result.data)
+        self.assertNotIn('Fritter', result.data)
+
+
+if __name__ == "__main__":
+    import unittest
+
+    unittest.main()
+

@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy import func
 
 from model import (User, FoodType, Recipe, Ingredient, 
-    StoredIngredient, CookedRecipe, Score, connect_to_db, db, init_app)
+    StoredIngredient, UserRecipe, Score, connect_to_db, db, init_app)
 
 def load_food_type():
     """Load food type by list below."""
@@ -27,7 +27,7 @@ def init_app():
     from flask import Flask
     app = Flask(__name__)
 
-    connect_to_db(app)
+    connect_to_db(app, )
     print "Connected to DB."
 
 
