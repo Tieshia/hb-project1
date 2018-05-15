@@ -195,6 +195,21 @@ def example_data():
     db.session.commit()
 
 
+def example_data_update_meal():
+    """Create additional sample data for updating user meal."""
+    user = User.query.filter_by(name='Jane').first()
+    recipe3 = Recipe(url='test3.com', image_url='test3_image.com',
+                    recipe_name='recipe3')
+    db.session.add(recipe3)
+    db.session.commit()
+
+    user_recipe_3 = UserRecipe(recipe_id=recipe3.recipe_id, times_cooked=0, 
+            active=True, user_id=user.user_id)
+    db.session.add(user_recipe_3)
+    db.session.commit()
+
+
+
 
     
 

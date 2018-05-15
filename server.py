@@ -302,6 +302,33 @@ def add_meal_to_plan():
     return redirect('/user-profile')
 
 
+@app.route('/made-meal', methods=['POST'])
+def update_user_meal():
+    """Update user meal once made."""
+
+    # TEST DB -- TESTED 
+
+    # Get recipe id from request.form
+    recipe_id = request.form.get('recipe_id')
+    recipe_id = int(recipe_id)
+
+    # Update user recipe to inactive and increment times_cooked by 1
+    user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
+        (UserRecipe.user_id == session['user'])).first()
+
+    if user_recipe:
+        user_recipe.active = False
+        user_recipe.times_cooked = user_recipe.times_cooked + 1
+
+        db.session.commit()
+
+        # Flash 'Logged.' and redirect to user profile
+        flash('Logged.')
+        return redirect('/user-profile')
+    else:
+        pass
+
+
 @app.route('/scores')
 def show_score():
     """Show all scores for user in session."""
