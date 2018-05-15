@@ -160,9 +160,11 @@ def show_user_profile():
     user_id = session['user']
     # pull up stored_ingredients and pass into template
     user_ingredients = StoredIngredient.query.filter_by(user_id=user_id).all()
+    user_recipes = UserRecipe.query.filter_by(active=True).all()
     # pull up active recipes on user_recipes and pass into template 
     # render profile template
-    return render_template('profile.html', ingredients=user_ingredients)
+    return render_template('profile.html', ingredients=user_ingredients,
+            recipes=user_recipes)
 
 
 @app.route('/add-ingredients', methods=['POST'])
@@ -281,7 +283,7 @@ def show_meals():
 def add_meal_to_plan():
     """Pass selected meals into UserRecipes."""
 
-    # TEST DB
+    # TEST DB -- TESTED :D
 
     selected_recipes = request.form.getlist('recipes')
 

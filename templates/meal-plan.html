@@ -5,10 +5,13 @@
 <h1>Meals</h1>
 <form action='/check-meal' method='POST'>
 {% for recipe in results %}
-    <h3>{{ recipe.recipe_name }}</h3><br>
-    <a href="{{ recipe.url }}">
-    <img src="{{ recipe.image_url }}"><br>
-    <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"><br>
+    <div>
+        <h3>{{ recipe.recipe_name }}</h3><br>
+        <a href="{{ recipe.url }}">
+            <img src="{{ recipe.image_url }}"><br>
+        </a>
+        <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"><br>
+    </div>
     {% endfor %}
     <input type="submit">
 </form>

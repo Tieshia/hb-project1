@@ -9,12 +9,28 @@ Pantry:
         <th>Type</th>
     </tr>
 
-
 {% for ingredient in ingredients %}
     <tr>
         <td>{{ ingredient.ingredient.ingredient_name }}</td>
         <td>{{ ingredient.ingredient.food_type.food_type }}</td>
     </tr>
 {% endfor %}
-
+</table>
+<form action='/user-profile' method='POST'>
+{% if recipes %}
+    {% for recipe in recipes %}
+        <div>
+            <h3>{{ recipe.recipe.recipe_name }}</h3><br>
+            <a href="{{ recipe.recipe.url }}">
+                <img src="{{ recipe.recipe.image_url }}"><br>
+            </a>
+            <button type="submit" name="recipe" value="{{ recipe.recipe.recipe_id }}">
+                I made this!
+            </button>
+        </div>
+    {% endfor %}
+    </form>
+{% else %}
+<h3>No recipes to display.</h3>
+{% endif %}
 {% endblock %}
