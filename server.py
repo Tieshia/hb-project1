@@ -64,6 +64,12 @@ def verify_credentials():
         return redirect('/login')
 
 
+@app.route('/logout', methods=['POST'])
+def log_user_out():
+    """Logs user out and removes user from session."""
+    pass
+
+
 @app.route('/register', methods=['GET'])
 def register():
     """Get info from registration page."""
@@ -193,6 +199,8 @@ def add_ingredients():
 def remove_ingredient():
     """Remove Stored Ingredient for user."""
 
+    # TEST DB -- TESTED
+
     ingredients = request.form.get('ingredients')
     ingredients = ingredients.split(',')
 
@@ -249,15 +257,38 @@ def show_meals():
     params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
     "app_key": os.environ['EDAMAM_SECRET_KEY'],
     "ingredients": ingredients}
-    r = get_recipes(params)
+    results = get_recipes(params)
 
-    return render_template('meal-plan.html', results=r)
+    recipes=[]
+
+    for recipe in results:
+        # If recipe url currently not in Recipes
+        if Recipe.query.filter_by(url=recipe['recipe']['url']).first() is None:
+            # Create new recipe and add to Recipes
+            response_recipe = Recipe(recipe_name=recipe['recipe']['label'], 
+                        url=recipe['recipe']['url'], 
+                        image_url=recipe['recipe']['image'])
+            db.session.add(response_recipe)
+        else:
+            response_recipe = Recipe.query.filter_by(url=recipe['recipe']['url']).first() 
+        recipes.append(response_recipe)
+    db.session.commit()
+
+    return render_template('meal-plan.html', results=recipes)
 
 @app.route('/check-meal', methods=['POST'])
 def add_meal_to_plan():
     """Pass selected meals into UserRecipes."""
 
     # TEST DB
+
+    selected_recipes = request.form.getlist('recipes')
+    attributes = {}
+    for recipe in selected_recipes:
+        recipe = recipe.split(',')
+        for attribute in recipe:
+            attribute.split('=')
+            attributes[attributes[0]] = attrb 
 
 
 @app.route('/scores')

@@ -3,10 +3,12 @@
 {% block title %}Meal Plan{% endblock %}
 {% block content %}
 <h1>Meals</h1>
-{% for item in results %}
-<div class='recipe-div'>
-    <h3>{{ item['recipe']['label'] }}</h3>
-    <img src="{{ item['recipe']['image'] }}" href="{{ item['recipe']['url'] }}">
-</div>
-{% endfor %}
+<form action='/check-meal' method='POST'>
+{% for recipe in results %}
+    <h3>{{ recipe.recipe_name }}</h3><br>
+    <img src="{{ recipe.image_url }}" href="{{ recipe.url }}"><br>
+    <input type="check" name="recipes" value="{{ recipe.recipe_id }}"><br>
+    {% endfor %}
+    <input type="submit">
+</form>
 {% endblock %}
