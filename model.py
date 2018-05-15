@@ -52,7 +52,7 @@ class Recipe(db.Model):
     __tablename__ = "recipes"
 
     recipe_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    recipe_name = db.Column(db.String(64))
+    recipe_name = db.Column(db.String())
     url = db.Column(db.String(200), nullable=True)
     image_url = db.Column(db.String(200), nullable=True)
 
@@ -183,7 +183,7 @@ def example_data():
     user_ing2 = StoredIngredient(user_id=jane.user_id, added_at=datetime.now(), ingredient_id=broccoli.ingredient_id)
 
     # User Recipes
-    user_rec1 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe1.recipe_id, active=True)
+    user_rec1 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe1.recipe_id, active=False)
 
     # Score
     user_score1 = Score(recipe_id=recipe1.recipe_id, effort_score=1, taste_score=1, user_id=jane.user_id, rated_at=datetime.now())
@@ -207,7 +207,7 @@ def init_app():
     connect_to_db(app)
     print "Connected to DB."
 
-def connect_to_db(app, db_uri="postgresql:///testdb"):
+def connect_to_db(app, db_uri="postgresql:///mealplan"):
     """Connect the database to our Flask app."""
 
     # Configure to use our PstgreSQL database

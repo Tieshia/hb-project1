@@ -6,8 +6,9 @@
 <form action='/check-meal' method='POST'>
 {% for recipe in results %}
     <h3>{{ recipe.recipe_name }}</h3><br>
-    <img src="{{ recipe.image_url }}" href="{{ recipe.url }}"><br>
-    <input type="check" name="recipes" value="{{ recipe.recipe_id }}"><br>
+    <a href="{{ recipe.url }}">
+    <img src="{{ recipe.image_url }}"><br>
+    <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"><br>
     {% endfor %}
     <input type="submit">
 </form>

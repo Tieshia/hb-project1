@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block title %}Plan Meal{% endblock %}
+{% block content %}
+<h3>Please enter the ingredients:</h3>
+<form action='/plan-meal' method='POST'>
+    <input type="text" name="ingredients">
+    <input type="submit">
+</form>
+{% endblock %}

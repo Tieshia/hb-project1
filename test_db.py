@@ -1,5 +1,6 @@
 from unittest import TestCase
-from model import User, Ingredient, StoredIngredient, connect_to_db, db, example_data
+from model import (User, Ingredient, StoredIngredient, Recipe, UserRecipe,
+    connect_to_db, db, example_data)
 from server import app
 from seed import load_food_type
 from flask import session
@@ -177,6 +178,27 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
         self.assertIsNone(StoredIngredient.query.filter_by(ingredient_id=steak.ingredient_id).first())
         self.assertIn('User Profile', result.data)
 
+
+    def test_check_meal(self):
+        """Test successfully adding items to meal plan."""
+
+        recipe3 = Recipe(url='test3.com', image_url='test3_image.com',
+                    recipe_name='recipe3')
+        recipe4 = Recipe(url='test4.com', image_url='test4_image.com',
+                    recipe_name='recipe4')
+        db.session.add_all([recipe3, recipe4])
+        db.session.commit()
+
+        recipe3_id = str(recipe3.recipe_id)
+        recipe4_id = str(recipe4.recipe_id)
+
+        result = self.client.post('/check-meal',
+                            data={'recipes': [recipe3_id, recipe4_id]},
+                            follow_redirects=True)
+
+        self.assertIn('Successfully added!', result.data)
+        self.assertIsNotNone(UserRecipe.query.filter_by(recipe_id=int(recipe3_id)).first())
+        self.assertIsNotNone(UserRecipe.query.filter_by(active=True).first())
 
 
 if __name__ == "__main__":

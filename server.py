@@ -232,18 +232,19 @@ def mark_recipe():
 @app.route('/plan-meal', methods=['GET'])
 def get_ingredients():
     """ Get user specified ingredients and show possible meals."""
-    pass
 
-    # return template for ingredient items; add meal preferences here as well?
+    # return template for ingredient items
+    return render_template('plan-meal.html')
 
 
-def get_recipes(params):
+def get_recipes(payload):
     """Get meal results from spoonacular."""
 
     # pass into EDAMAM api
-    r = requests.get(requests.get("https://api.edamam.com/search", 
-        params=payload))
-    return r.json()
+    r = requests.get("https://api.edamam.com/search", 
+        params=payload)
+    data = r.json()    
+    return data['hits']
 
 
 @app.route('/plan-meal', methods=['POST'])
@@ -252,11 +253,11 @@ def show_meals():
     
     # get ingredients from meal plan
     ingredients = request.form.get("ingredients")
-    ingredients = ','.join(ingredients)
+    # ingredients = ','.join(ingredients)
     
     params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
     "app_key": os.environ['EDAMAM_SECRET_KEY'],
-    "ingredients": ingredients}
+    "q": ingredients}
     results = get_recipes(params)
 
     recipes=[]
@@ -283,12 +284,20 @@ def add_meal_to_plan():
     # TEST DB
 
     selected_recipes = request.form.getlist('recipes')
-    attributes = {}
-    for recipe in selected_recipes:
-        recipe = recipe.split(',')
-        for attribute in recipe:
-            attribute.split('=')
-            attributes[attributes[0]] = attrb 
+
+    for recipe_id in selected_recipes:
+        recipe_id = int(recipe_id)
+        plan_recipe = UserRecipe.query.filter_by(recipe_id=recipe_id).first()
+        if plan_recipe:
+            plan_recipe.active = True
+        else:
+            new_user_recipe = UserRecipe(recipe_id=recipe_id, times_cooked=0, 
+                active=True, user_id=session['user'])
+            db.session.add(new_user_recipe)
+    db.session.commit()
+
+    flash('Successfully added!')
+    return redirect('/user-profile')
 
 
 @app.route('/scores')
