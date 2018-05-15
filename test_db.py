@@ -148,7 +148,8 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
         self.assertIn('Produce', result.data)
         self.assertIn('steak', result.data)
         self.assertNotIn('chicken', result.data)
-        # self.assertIn('No recipes to display', result.data)
+        self.assertIn('No recipes to display', result.data)
+        self.assertNotIn('recipe1', result.data)
 
 
     def test_add_ingredients(self):
@@ -199,6 +200,8 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
 
         self.assertIn('Successfully added!', result.data)
         self.assertIsNotNone(UserRecipe.query.filter_by(recipe_id=int(recipe3_id)).first())
+        self.assertIn('recipe3', result.data)
+        self.assertNotIn('No recipes to display', result.data)
 
 
 if __name__ == "__main__":
