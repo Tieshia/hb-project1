@@ -67,7 +67,10 @@ def verify_credentials():
 @app.route('/logout', methods=['POST'])
 def log_user_out():
     """Logs user out and removes user from session."""
-    pass
+    
+    del session['user']
+    flash('Goodbye!')
+    return redirect('/')
 
 
 @app.route('/register', methods=['GET'])
@@ -222,15 +225,6 @@ def remove_ingredient():
     return redirect('/user-profile')
 
 
-
-@app.route('/recipe-made', methods=['POST'])
-def mark_recipe():
-    """Change user_recipe to inactive and increment times_counted."""
-    pass
-
-    # TEST DB
-
-
 @app.route('/plan-meal', methods=['GET'])
 def get_ingredients():
     """ Get user specified ingredients and show possible meals."""
@@ -279,6 +273,7 @@ def show_meals():
 
     return render_template('meal-plan.html', results=recipes)
 
+
 @app.route('/check-meal', methods=['POST'])
 def add_meal_to_plan():
     """Pass selected meals into UserRecipes."""
@@ -322,42 +317,54 @@ def update_user_meal():
 
         db.session.commit()
 
-        # Flash 'Logged.' and redirect to user profile
+        # Add recipe id to session to carry over into score-recipe redirect
+        session['recipe_id'] = recipe_id
+
+        # **Flash 'Logged.' and redirect to user profile
         flash('Logged.')
+        # **Change to score-recipe route
         return redirect('/user-profile')
     else:
         pass
 
 
-@app.route('/scores')
-def show_score():
-    """Show all scores for user in session."""
-    pass
-
-    # TEST DB
-
-    # Get user from session and pass their scores into render template
+@app.route('/score-recipe', methods=['GET'])
+def get_user_score():
+    """Renders template for collecting user info."""
+     return render_template('score-recipe.html')
 
 
-@app.route('/score-recipe/<int:recipe_id>', methods=['GET'])
-def get_score():
-    """show form to have user update score."""
-    pass
-
-    # render template for scoring recipe
-
-
-@app.route('/score-recipe/<int:recipe_id>', methods=['POST'])
+@app.route('/score-recipe', methods=['POST'])
 def update_score():
     """Adds/updates user score for recipe."""
-    pass
 
-    # TEST DB 
+    # TEST DB -- TESTED
 
+    # Get scores from request.form
+    effort = request.form.get('effort')
+    taste = request.form.get('taste')
     # If user score for recipe already exists:
+    user_score = Score.query.filter((Score.recipe_id == session['recipe_id']) & 
+        (Score.user_id == session['user'])).first()
+
+    if user_score:
         # update in database
+        user_score.effort_score = effort
+        user_score.taste_score = taste
+        user_score.rated_at = datetime.now()
     # Else
+    else:
         # Add new score row to database
+        new_score = Score(rated_at=datetime.now(), effort_score=int(effort), taste_score=int(taste),
+                    user_id=session['user'], recipe_id=session['recipe_id'])
+        db.session.add(new_score)
+    db.session.commit()
+
+    del session['recipe_id']
+
+    # redirect to user profile
+    flash('Successfully updated')
+    return redirect('/user-profile')
 
 
 ################################################################################

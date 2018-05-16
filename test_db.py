@@ -1,5 +1,5 @@
 from unittest import TestCase
-from model import (User, Ingredient, StoredIngredient, Recipe, UserRecipe,
+from model import (User, Ingredient, StoredIngredient, Recipe, UserRecipe, Score,
     connect_to_db, db, example_data, example_data_update_meal)
 from server import app
 from seed import load_food_type
@@ -202,6 +202,32 @@ class FlaskTestsDatabaseLoggedIn(TestCase):
         self.assertIsNotNone(UserRecipe.query.filter_by(recipe_id=int(recipe3_id)).first())
         self.assertIn('recipe3', result.data)
         self.assertNotIn('No recipes to display', result.data)
+
+
+    def test_score_recipe(self):
+        """Test successfully adding/updating user score for recipe."""
+
+        # 
+        user = User.query.filter_by(name='Jane').first()
+        recipe = Recipe.query.filter_by(recipe_name='recipe1').first()
+        user_score = Score.query.filter((Score.recipe_id == recipe.recipe_id) & 
+            (Score.user_id == user.user_id))
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['recipe_id'] = recipe.recipe_id
+
+        result = self.client.post('/score-recipe',
+                            data={'effort': '1',
+                            'taste': '-1'},
+                            follow_redirects=True)
+
+        
+        updated_score = Score.query.filter((Score.recipe_id == recipe.recipe_id) & 
+            (Score.user_id == user.user_id)).first()
+
+        self.assertTrue(updated_score.taste_score == -1)
+        self.assertIn('Successfully updated', result.data)
 
 
 class FlaskTestsDatabaseLoggedInCheckedMeal(TestCase):
