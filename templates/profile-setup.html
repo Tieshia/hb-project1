@@ -4,8 +4,8 @@
 <h1>Profile Set Up</h1>
 <h3>Please enter the ingredients of your pantry here:</h3>
 <form class="profile-form" action="/create-profile" method='POST'>
-    <input type="text" name="ingredients">
-    <select name="type">
+    <input type="text" name="ingredients" multiple>
+    <select name="types" multiple>
         <option value="Dairy and Egg Products">Dairy and Egg Products</option>
         <option value="Spices and Herbs">Spices and Herbs</option>
         <option value="Fats and Oils">Fats and Oils</option>
@@ -18,13 +18,14 @@
         <option value="Unknown">Unknown</option>
     </select>
     <button type="button" class="new-button" onclick="addrow()">+</button><br>
-    <input type="submit">
+    <input type="submit" class='submit-button'>
 </form>
 
 <script type="text/javascript">
     function addRow(evt) {
-        $('.new-button').attr("class", "old-button");
-        $('.profile-form').append('<input type="text" name="ingredients"><select name="type"> <option value="Dairy and Egg Products">Dairy and Egg Products</option> <option value="Spices and Herbs">Spices and Herbs</option> <option value="Fats and Oils">Fats and Oils</option> <option value="Proteins">Proteins</option> <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option> <option value="Produce">Produce</option> <option value="Nuts and Seeds">Nuts and Seeds</option> <option value="Grains and Pasta">Grains and Pasta</option> <option value="Miscellaneous">Miscellaneous</option> <option value="Unknown">Unknown</option> </select>   <button type="button" class="new-button" onclick="addrow()">+</button><br>');
+        $('.new-button').remove();
+        $('.submit-button').remove()
+        $('.profile-form').append('<input type="text" name="ingredients"><select name="types"> <option value="Dairy and Egg Products">Dairy and Egg Products</option> <option value="Spices and Herbs">Spices and Herbs</option> <option value="Fats and Oils">Fats and Oils</option> <option value="Proteins">Proteins</option> <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option> <option value="Produce">Produce</option> <option value="Nuts and Seeds">Nuts and Seeds</option> <option value="Grains and Pasta">Grains and Pasta</option> <option value="Miscellaneous">Miscellaneous</option> <option value="Unknown">Unknown</option> </select>   <button type="button" class="new-button" onclick="addrow()">+</button><br> <input type="submit" class="submit-button">');
     }
 //  Add event listener to profile form, .on'click', pass middle argument that is name of new class, callback().
     $('button').on('click', addRow);

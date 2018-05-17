@@ -121,12 +121,13 @@ def update_stored_ingredients():
     """ adds stored ingredients to database."""
 
     # TEST DB -- TESTED
-
     # get ingredients
-    ingredients = request.form.get('ingredients')
-    ingredients = ingredients.split(',')
-    types = request.form.get('types')
-    types = types.split(',')
+    ingredients = request.form.getlist('ingredients')
+    print "Ingredients:", ingredients
+    # ingredients = ingredients.split(',')
+    types = request.form.getlist('types')
+    print "Types:", types
+    # types = types.split(',')
 
     # create store_ingredients
     for i in range(len(ingredients)):
