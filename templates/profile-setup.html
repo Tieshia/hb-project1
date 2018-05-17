@@ -3,9 +3,31 @@
 {% block content %}
 <h1>Profile Set Up</h1>
 <h3>Please enter the ingredients of your pantry here:</h3>
-<form action="/create-profile" method='POST'>
+<form class="profile-form" action="/create-profile" method='POST'>
     <input type="text" name="ingredients">
-    <input type="text" name="types">
+    <select name="type">
+        <option value="Dairy and Egg Products">Dairy and Egg Products</option>
+        <option value="Spices and Herbs">Spices and Herbs</option>
+        <option value="Fats and Oils">Fats and Oils</option>
+        <option value="Proteins">Proteins</option>
+        <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option>
+        <option value="Produce">Produce</option>
+        <option value="Nuts and Seeds">Nuts and Seeds</option>
+        <option value="Grains and Pasta">Grains and Pasta</option>
+        <option value="Miscellaneous">Miscellaneous</option>
+        <option value="Unknown">Unknown</option>
+    </select>
+    <button type="button" class="new-button" onclick="addrow()">+</button><br>
     <input type="submit">
 </form>
+
+<script type="text/javascript">
+    function addRow(evt) {
+        $('.new-button').attr("class", "old-button");
+        $('.profile-form').append('<input type="text" name="ingredients"><select name="type"> <option value="Dairy and Egg Products">Dairy and Egg Products</option> <option value="Spices and Herbs">Spices and Herbs</option> <option value="Fats and Oils">Fats and Oils</option> <option value="Proteins">Proteins</option> <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option> <option value="Produce">Produce</option> <option value="Nuts and Seeds">Nuts and Seeds</option> <option value="Grains and Pasta">Grains and Pasta</option> <option value="Miscellaneous">Miscellaneous</option> <option value="Unknown">Unknown</option> </select>   <button type="button" class="new-button" onclick="addrow()">+</button><br>');
+    }
+//  Add event listener to profile form, .on'click', pass middle argument that is name of new class, callback().
+    $('button').on('click', addRow);
+    $('.profile-form').on('click', '.new-button', addRow);
+</script>
 {% endblock %}

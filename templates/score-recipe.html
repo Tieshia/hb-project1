@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Score Recipe{% endblock %}
+{% block content %}
+<h3>How was your meal?</h3>
+<form action='/score-recipe' method='POST'>
+    Effort: <input type="text" name="effort"><br>
+    Taste: <input type="text" name="taste"><br>
+    <input type="submit">
+</form>
+{% endblock %}

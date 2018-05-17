@@ -323,7 +323,7 @@ def update_user_meal():
         # **Flash 'Logged.' and redirect to user profile
         flash('Logged.')
         # **Change to score-recipe route
-        return redirect('/user-profile')
+        return redirect('/score-recipe')
     else:
         pass
 
@@ -331,7 +331,8 @@ def update_user_meal():
 @app.route('/score-recipe', methods=['GET'])
 def get_user_score():
     """Renders template for collecting user info."""
-     return render_template('score-recipe.html')
+    
+    return render_template('score-recipe.html')
 
 
 @app.route('/score-recipe', methods=['POST'])
