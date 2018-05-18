@@ -16,8 +16,8 @@ Pantry:
     </tr>
 {% endfor %}
 </table>
-<form action='/made-meal' method='POST'>
 {% if recipes %}
+<form action='/score-recipe' method='POST'>
     {% for recipe in recipes %}
         <div>
             <h3>{{ recipe.recipe.recipe_name }}</h3><br>
@@ -29,8 +29,11 @@ Pantry:
             </button>
         </div>
     {% endfor %}
-    </form>
+</form>
 {% else %}
 <h3>No recipes to display.</h3>
 {% endif %}
+<form action="/plan-meal">
+    <input type="submit" value="Create a meal plan!">
+</form>
 {% endblock %}
