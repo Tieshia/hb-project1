@@ -17,7 +17,7 @@ Pantry:
 {% endfor %}
 </table>
 {% if recipes %}
-<form action='/score-recipe' method='POST'>
+<form action='/made-meal' method='POST'>
     {% for recipe in recipes %}
         <div>
             <h3>{{ recipe.recipe.recipe_name }}</h3><br>

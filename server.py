@@ -306,7 +306,9 @@ def update_user_meal():
 
     # Get recipe id from request.form
     recipe_id = request.form.get('recipe_id')
-    recipe_id = int(recipe_id)
+    # recipe_id = int(recipe_id)
+    # Add recipe id to session to carry over into score-recipe redirect
+    session['recipe_id'] = recipe_id
 
     # Update user recipe to inactive and increment times_cooked by 1
     user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
@@ -317,9 +319,6 @@ def update_user_meal():
         user_recipe.times_cooked = user_recipe.times_cooked + 1
 
         db.session.commit()
-
-        # Add recipe id to session to carry over into score-recipe redirect
-        session['recipe_id'] = recipe_id
 
         # **Flash 'Logged.' and redirect to user profile
         flash('Logged.')
