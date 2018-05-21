@@ -178,6 +178,11 @@ def example_data():
     db.session.commit()
 
 
+    # RecipeIngredient
+    rec_ing1 = RecipeIngredient(ingredient_id=steak.ingredient_id, 
+        recipe_id=recipe1.recipe_id)
+
+
     # User Recipes
     user_rec1 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe1.recipe_id, active=False)
     user_rec2 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe2.recipe_id, active=True)
@@ -185,7 +190,7 @@ def example_data():
     # Score
     user_score1 = Score(recipe_id=recipe1.recipe_id, score=1, user_id=jane.user_id, rated_at=datetime.now())
 
-    db.session.add_all([user_rec1, user_rec2, user_score1])
+    db.session.add_all([rec_ing1, user_rec1, user_rec2, user_score1])
     db.session.commit()
 
 

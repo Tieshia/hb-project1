@@ -46,7 +46,7 @@ def get_ingredient(ingredient_name): # -- TESTED
     return Ingredient.query.filter_by(ingredient_name=ingredient_name).first()
 
 
-def get_ingredient_type(ingredient_type): 
+def get_ingredient_type(ingredient_type): # -- TESTED
     """Returns type id based on ingredient type."""
 
     return FoodType.query.filter_by(food_type=ingredient_type).first()

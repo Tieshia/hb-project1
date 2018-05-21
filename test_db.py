@@ -109,6 +109,14 @@ class FlaskTestsDatabase(TestCase):
         self.assertIsNotNone(new_ingredient)
 
 
+    def test_get_recipe_ingredient(self):
+        """Test retrieval of recipe ingredient based on recipe id."""
+
+        recipe = get_recipe_by_url('test1.com') 
+        recipe_ingredient = get_recipe_ingredient(recipe.recipe_id)
+        self.assertIsNotNone(recipe_ingredient)
+
+
 
 
 
@@ -142,15 +150,6 @@ class FlaskTestsDatabase(TestCase):
 
 #         db.session.close()
 #         db.drop_all()
-
-# # FOR CREATING NEW USER:
-# # self.assertIsNotNone(User.query.filter_by(email='sdevelops@gmail.com').first())
-
-
-# # FOR ADDING NEW INGREDIENT
-#         # self.assertIsNotNone(Ingredient.query.filter_by(ingredient_name='spinach').first())
-#         # self.assertTrue(len(Ingredient.query.filter_by(ingredient_name='spinach').all()) == 1)
-
 
 #     def test_check_meal(self):
 #         """Test successfully adding items to meal plan."""
