@@ -96,7 +96,7 @@ def create_recipe(recipe_name, url, image_url): # -- TESTED
     db.session.commit()
 
 
-def get_recipe_ingredient(recipe_id):
+def get_recipe_ingredient(recipe_id): # -- TESTED
     """Returns recipe_ingredient based on recipe_id."""
 
     return RecipeIngredient.query.filter_by(recipe_id=recipe_id).first()

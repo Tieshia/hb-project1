@@ -117,6 +117,17 @@ class FlaskTestsDatabase(TestCase):
         self.assertIsNotNone(recipe_ingredient)
 
 
+    def test_create_recipe_ingredient(self):
+        """Test addition of recipe ingredient to database."""
+
+        recipe = get_recipe_by_url('test2.com')
+        ingredient = get_ingredient('steak')
+        create_recipe_ingredient(recipe.recipe_id, ingredient.ingredient_id)
+        recipe_ingredient  = RecipeIngredient.query.filter((RecipeIngredient.recipe_id == recipe.recipe_id) &
+            (RecipeIngredient.ingredient_id == ingredient.ingredient_id))
+        self.assertIsNotNone(recipe_ingredient)
+
+
 
 
 
