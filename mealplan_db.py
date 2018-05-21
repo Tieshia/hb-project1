@@ -75,7 +75,7 @@ def add_ingredient(ingredient_name, ingredient_type):
     return get_ingredient(ingredient_name)
 
 
-def get_recipe(url):
+def get_recipe(url): # -- TESTED
     """Returns recipe by url."""
 
     return Recipe.query.filter_by(url=url).first()

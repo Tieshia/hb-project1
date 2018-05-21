@@ -59,6 +59,14 @@ class FlaskTestsDatabase(TestCase):
         recipe = get_recipe('test3.com')
         self.assertIsNotNone(recipe)
 
+
+    def test_create_recipe(self):
+        """Test addition of new recipe to database."""
+
+        create_recipe('test6', 'test6.com', 'test6_image.com')
+        test_recipe = get_recipe('test6.com')
+        self.assertIsNotNone(test_recipe)
+
 # class FlaskTestsDatabaseLoggedIn(TestCase):
 #     """Flask database tests with user logged in to session."""
 
