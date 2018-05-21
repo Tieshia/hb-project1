@@ -52,7 +52,7 @@ def get_ingredient_type(ingredient_type):
     return FoodType.query.filter_by(food_type=ingredient_type).first()
 
 
-def create_ingredient(ingredient_name, type_id):
+def create_ingredient(ingredient_name, type_id): # -- TESTED
     """Create new ingredient in db."""
 
     new_ingredient = Ingredient(ingredient_name=ingredient_name, type_id=type_id)
@@ -73,7 +73,7 @@ def add_ingredient(ingredient_name, ingredient_type):
     # Get ingredient and return
     return get_ingredient(ingredient_name)
 
-def get_recipe_by_id(recipe_id):
+def get_recipe_by_id(recipe_id): # -- TESTED
     """Returns recipe by recipe_id."""
 
     return Recipe.query.filter_by(recipe_id=recipe_id).first()

@@ -87,10 +87,17 @@ class FlaskTestsDatabase(TestCase):
 
 
     def test_get_ingredient(self):
-        """Test retrieval of ingedient type based on ingredient."""
+        """Test retrieval of ingredient based on ingredient name."""
 
         ingredient = get_ingredient('steak')
         self.assertIsNotNone(ingredient)
+
+
+    def test_get_ingredient_type(self):
+        """Test retrieval of food type object based on ingreident type."""
+
+        food_type = get_ingredient_type('Proteins')
+        self.assertIsNotNone(food_type)
 
 
     def test_create_ingredient(self):
@@ -100,6 +107,9 @@ class FlaskTestsDatabase(TestCase):
         create_ingredient('chicken', protein_ingredient.type_id)
         new_ingredient = get_ingredient('chicken')
         self.assertIsNotNone(new_ingredient)
+
+
+
 
 
 # class FlaskTestsDatabaseLoggedIn(TestCase):
