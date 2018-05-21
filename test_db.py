@@ -45,6 +45,12 @@ class FlaskTestsDatabase(TestCase):
         self.assertIsNotNone(get_user('sdevelops@gmail.com'))
 
 
+    def test_get_active_user_recipes(self):
+        user = get_user('jhacks@gmail.com')
+        recipes = get_active_user_recipes(user.user_id)
+        self.assertTrue(len(recipes) == 1) 
+
+
 # class FlaskTestsDatabaseLoggedIn(TestCase):
 #     """Flask database tests with user logged in to session."""
 

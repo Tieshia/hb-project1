@@ -179,12 +179,12 @@ def example_data():
 
     # User Recipes
     user_rec1 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe1.recipe_id, active=False)
-    # user_rec2 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe2.recipe_id, active=True)
+    user_rec2 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe2.recipe_id, active=True)
 
     # Score
     user_score1 = Score(recipe_id=recipe1.recipe_id, score=1, user_id=jane.user_id, rated_at=datetime.now())
 
-    db.session.add_all([user_rec1, user_score1])
+    db.session.add_all([user_rec1, user_rec2, user_score1])
     db.session.commit()
 
 
