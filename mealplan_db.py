@@ -20,7 +20,7 @@ def create_new_user(name, email, password): # -- TESTED
     return new_user
 
 
-def get_active_user_recipes(user_id):
+def get_active_user_recipes(user_id): # -- TESTED
     """Get list of active user recipes based on user_id."""
 
     return UserRecipe.query.filter((UserRecipe.active == True) & 
@@ -30,7 +30,7 @@ def get_active_user_recipes(user_id):
 def create_user_recipe(recipe_id, user_id):
     """Create new user recipe in db."""
 
-    plan_recipe = get_user_recipe(recipe_id)
+    plan_recipe = get_recipe(recipe_id)
 
     if plan_recipe:
             plan_recipe.active = True

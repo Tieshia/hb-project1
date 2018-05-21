@@ -167,13 +167,14 @@ def example_data():
     # Recipe
     recipe1 = Recipe(url='test1.com', image_url='test1_image.com', recipe_name='recipe1')
     recipe2 = Recipe(url='test2.com', image_url='test2_image.com', recipe_name='recipe2')
+    recipe3 = Recipe(url='test3.com', image_url='test3_image.com', recipe_name='recipe3')
 
 
     # Ingredient
     steak = Ingredient(type_id=protein.type_id, ingredient_name='steak')
     broccoli = Ingredient(type_id=produce.type_id, ingredient_name='broccoli')
 
-    db.session.add_all([recipe1, recipe2, steak, broccoli])
+    db.session.add_all([recipe1, recipe2, recipe3, steak, broccoli])
     db.session.commit()
 
 

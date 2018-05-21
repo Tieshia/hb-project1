@@ -46,10 +46,18 @@ class FlaskTestsDatabase(TestCase):
 
 
     def test_get_active_user_recipes(self):
+        """Test retrieval of active user recipes based on user id."""
+
         user = get_user('jhacks@gmail.com')
         recipes = get_active_user_recipes(user.user_id)
         self.assertTrue(len(recipes) == 1) 
 
+
+    def test_get_recipe(self):
+        """Test retrieval of recipe based on url."""
+
+        recipe = get_recipe('test3.com')
+        self.assertIsNotNone(recipe)
 
 # class FlaskTestsDatabaseLoggedIn(TestCase):
 #     """Flask database tests with user logged in to session."""
