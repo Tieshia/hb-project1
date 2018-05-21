@@ -28,12 +28,11 @@ def get_active_user_recipes(user_id): # -- TESTED
 
 
 def create_user_recipe(recipe_id, user_id):
-    """Create new user recipe in db."""
+    """Create/update user recipe in db."""
 
-    plan_recipe = get_recipe(recipe_id)
-
-    if plan_recipe:
-            plan_recipe.active = True
+    user_recipe = UserRecipe.query.filter_by(recipe_id=recipe_id).first()
+    if user_recipe:
+        user_recipe.active = True
     else:
         new_user_recipe = UserRecipe(recipe_id=recipe_id, times_cooked=0, 
             active=True, user_id=user_id)
@@ -41,7 +40,7 @@ def create_user_recipe(recipe_id, user_id):
     db.session.commit()
 
 
-def get_ingredient(ingredient_name): # TESTED
+def get_ingredient(ingredient_name): # -- TESTED
     """Returns ingredient based on ingredient_name."""
 
     return Ingredient.query.filter_by(ingredient_name=ingredient_name).first()
@@ -74,19 +73,24 @@ def add_ingredient(ingredient_name, ingredient_type):
     # Get ingredient and return
     return get_ingredient(ingredient_name)
 
+def get_recipe_by_id(recipe_id):
+    """Returns recipe by recipe_id."""
 
-def get_recipe(url): # -- TESTED
+    return Recipe.query.filter_by(recipe_id=recipe_id).first()
+
+
+def get_recipe_by_url(url): # -- TESTED
     """Returns recipe by url."""
 
     return Recipe.query.filter_by(url=url).first()
 
 
-def create_recipe(recipe_name, url, image_url):
+def create_recipe(recipe_name, url, image_url): # -- TESTED
     """Create new recipe in db."""
 
-    response_recipe = Recipe(recipe_name=recipe['recipe']['label'], 
-                        url=recipe['recipe']['url'], 
-                        image_url=recipe['recipe']['image'])
+    response_recipe = Recipe(recipe_name=recipe_name, 
+                        url=url, 
+                        image_url=image_url)
     db.session.add(response_recipe)
 
     db.session.commit()

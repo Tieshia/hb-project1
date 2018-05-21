@@ -10,7 +10,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from mealplan_db import (get_user, create_new_user, get_active_user_recipes,
     create_user_recipe, get_ingredient, get_ingredient_type, create_ingredient,
-    add_ingredient, get_recipe, create_recipe, get_recipe_ingredient, 
+    add_ingredient, get_recipe_by_url, get_recipe_by_id, create_recipe, get_recipe_ingredient, 
     create_recipe_ingredient, mark_meal_made, get_score, upsert_score)
 
 from model import connect_to_db

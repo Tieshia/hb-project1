@@ -53,19 +53,38 @@ class FlaskTestsDatabase(TestCase):
         self.assertTrue(len(recipes) == 1) 
 
 
-    def test_get_recipe(self):
+    def test_get_recipe_by_url(self):
         """Test retrieval of recipe based on url."""
 
-        recipe = get_recipe('test3.com')
+        recipe = get_recipe_by_url('test3.com')
         self.assertIsNotNone(recipe)
+
+    
+    def test_get_recipe_by_id(self):
+        """Test retrival of recipe based on id."""
+
+        recipe = get_recipe_by_url('test3.com')
+        recipe_by_id = get_recipe_by_id(recipe.recipe_id)
+        self.assertIsNotNone(recipe_by_id)
 
 
     def test_create_recipe(self):
         """Test addition of new recipe to database."""
 
         create_recipe('test6', 'test6.com', 'test6_image.com')
-        test_recipe = get_recipe('test6.com')
+        test_recipe = get_recipe_by_url('test6.com')
         self.assertIsNotNone(test_recipe)
+
+
+    def test_create_user_recipe(self):
+        """Test addiiton of new user recipe to database."""
+
+        recipe = get_recipe_by_url('test3.com')
+        user = get_user('jhacks@gmail.com')
+        create_user_recipe(recipe.recipe_id, user.user_id)
+        user_recipe = UserRecipe.query.filter_by(recipe_id=recipe.recipe_id).first()
+        self.assertIsNotNone(user_recipe)
+
 
 # class FlaskTestsDatabaseLoggedIn(TestCase):
 #     """Flask database tests with user logged in to session."""
