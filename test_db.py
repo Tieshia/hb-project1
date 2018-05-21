@@ -61,7 +61,7 @@ class FlaskTestsDatabase(TestCase):
 
     
     def test_get_recipe_by_id(self):
-        """Test retrival of recipe based on id."""
+        """Test retrieval of recipe based on id."""
 
         recipe = get_recipe_by_url('test3.com')
         recipe_by_id = get_recipe_by_id(recipe.recipe_id)
@@ -77,13 +77,29 @@ class FlaskTestsDatabase(TestCase):
 
 
     def test_create_user_recipe(self):
-        """Test addiiton of new user recipe to database."""
+        """Test addition of new user recipe to database."""
 
         recipe = get_recipe_by_url('test3.com')
         user = get_user('jhacks@gmail.com')
         create_user_recipe(recipe.recipe_id, user.user_id)
         user_recipe = UserRecipe.query.filter_by(recipe_id=recipe.recipe_id).first()
         self.assertIsNotNone(user_recipe)
+
+
+    def test_get_ingredient(self):
+        """Test retrieval of ingedient type based on ingredient."""
+
+        ingredient = get_ingredient('steak')
+        self.assertIsNotNone(ingredient)
+
+
+    def test_create_ingredient(self):
+        """Test addition of new ingredient to database."""
+
+        protein_ingredient = get_ingredient('steak')
+        create_ingredient('chicken', protein_ingredient.type_id)
+        new_ingredient = get_ingredient('chicken')
+        self.assertIsNotNone(new_ingredient)
 
 
 # class FlaskTestsDatabaseLoggedIn(TestCase):

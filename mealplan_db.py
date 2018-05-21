@@ -27,7 +27,7 @@ def get_active_user_recipes(user_id): # -- TESTED
         (UserRecipe.user_id == user_id)).all()
 
 
-def create_user_recipe(recipe_id, user_id):
+def create_user_recipe(recipe_id, user_id): # -- TESTED
     """Create/update user recipe in db."""
 
     user_recipe = UserRecipe.query.filter_by(recipe_id=recipe_id).first()
@@ -46,7 +46,7 @@ def get_ingredient(ingredient_name): # -- TESTED
     return Ingredient.query.filter_by(ingredient_name=ingredient_name).first()
 
 
-def get_ingredient_type(ingredient_type):
+def get_ingredient_type(ingredient_type): 
     """Returns type id based on ingredient type."""
 
     return FoodType.query.filter_by(food_type=ingredient_type).first()
