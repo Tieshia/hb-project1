@@ -1,9 +1,7 @@
-"""Models and database functions for Meal Planning project."""
+"""Models and functions for creating database for Meal Planning project."""
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-
-# from seed import load_food_type
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -64,7 +62,7 @@ class Recipe(db.Model):
 
 
 class Ingredient(db.Model):
-    """Ingredients for recipes."""
+    """Ingredients."""
 
     __tablename__ = "ingredients"
 
@@ -75,30 +73,30 @@ class Ingredient(db.Model):
     food_type = db.relationship('FoodType', backref='ingredients')
 
     def __repr__(self):
-        """String representation of ingrdient."""
+        """String representation of ingredient."""
 
         return "<id={} ingredient={} type_id={}>".format(self.ingredient_id,
             self.ingredient_name, self.type_id)
 
 
-class StoredIngredient(db.Model):
-    """Shows ingredients for each user."""
+class RecipeIngredient(db.Model):
+    """Recipes with each ingredient listed by user."""
 
-    __tablename__ = "stored_ingredients"
+    __tablename__ = "user_ingredients"
 
-    record_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_ingredient_id = db.Column(db.Integer, autoincrement=True, 
+        primary_key=True)
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredients.ingredient_id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    added_at = db.Column(db.DateTime)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
 
-    ingredient = db.relationship('Ingredient', backref='stored_ingredients')
-    user = db.relationship('User', backref='stored_ingredients')
+    ingredients = db.relationship('Ingredient', backref='user_ingredients')
+    recipes = db.relationship('Recipe', backref='user_ingredients')
 
     def __repr__(self):
-        """String representation of a stored ingredient."""
+        """String representation of user ingredient."""
 
-        return "<id={} user_id={} added_at={}>".format(self.ingredient_id,
-            self.user_id, self.added_at)
+        return "<id={} ingredient_id={} recipe_id={}>".format(self.user_ingredient_id,
+            self.ingredient_id, self.recipe_id)
 
 
 class UserRecipe(db.Model):
@@ -128,20 +126,18 @@ class Score(db.Model):
 
     score_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     rated_at = db.Column(db.DateTime)
-    effort_score = db.Column(db.Integer)
-    taste_score = db.Column(db.Integer)
+    score = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
 
-    recipes = db.relationship('Recipe', backref='scores')
+    recipe = db.relationship('Recipe', backref='scores')
 
 
     def __repr__(self):
         """String representation of user score."""
 
-        return "<id={} rated_at={} effort={} taste={} recipe_id={}>".format(
-            self.score_id, self.rated_at, self.effort_score, self.taste_score,
-            self.recipe_id)
+        return "<id={} rated_at={} score={} recipe_id={}>".format(
+            self.score_id, self.rated_at, self.score,self.recipe_id)
 
 
 def example_data():
@@ -150,7 +146,7 @@ def example_data():
     # In case this is run more than once, empty out existing data.
     Score.query.delete()
     UserRecipe.query.delete()
-    StoredIngredient.query.delete()
+    RecipeIngredient.query.delete()
     Ingredient.query.delete()
     Recipe.query.delete()
     FoodType.query.delete()
@@ -180,18 +176,15 @@ def example_data():
     db.session.add_all([recipe1, recipe2, steak, broccoli])
     db.session.commit()
 
-    # User Ingredients
-    user_ing1 = StoredIngredient(user_id=jane.user_id, added_at=datetime.now(), ingredient_id=steak.ingredient_id)
-    user_ing2 = StoredIngredient(user_id=jane.user_id, added_at=datetime.now(), ingredient_id=broccoli.ingredient_id)
 
     # User Recipes
     user_rec1 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe1.recipe_id, active=False)
     # user_rec2 = UserRecipe(user_id=jane.user_id, times_cooked=0, recipe_id=recipe2.recipe_id, active=True)
 
     # Score
-    user_score1 = Score(recipe_id=recipe1.recipe_id, effort_score=1, taste_score=1, user_id=jane.user_id, rated_at=datetime.now())
+    user_score1 = Score(recipe_id=recipe1.recipe_id, score=1, user_id=jane.user_id, rated_at=datetime.now())
 
-    db.session.add_all([user_ing1, user_ing2, user_rec1, user_score1])
+    db.session.add_all([user_rec1, user_score1])
     db.session.commit()
 
 
@@ -234,7 +227,7 @@ def connect_to_db(app, db_uri="postgresql:///mealplan"):
     db.app = app
     db.init_app(app)
 
-
+###############################################################################
 if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
     # you in a state of being able to work with the database directly.

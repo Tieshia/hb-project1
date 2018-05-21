@@ -4,7 +4,7 @@ import datetime
 from sqlalchemy import func
 
 from model import (User, FoodType, Recipe, Ingredient, 
-    StoredIngredient, UserRecipe, Score, connect_to_db, db, init_app)
+    RecipeIngredient, UserRecipe, Score, connect_to_db, db, init_app)
 
 def load_food_type():
     """Load food type by list below."""

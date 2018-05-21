@@ -3,14 +3,17 @@
 import os
 import requests
 import pdb
-from datetime import datetime
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import (connect_to_db, db, User, FoodType, Recipe, Ingredient, 
-    StoredIngredient, UserRecipe, Score)
+from mealplan_db import (get_user, create_new_user, get_active_user_recipes,
+    create_user_recipe, get_ingredient, get_ingredient_type, create_ingredient,
+    add_ingredient, get_recipe, create_recipe, get_recipe_ingredient, 
+    create_recipe_ingredient, mark_meal_made, get_score, upsert_score)
+
+from model import connect_to_db
 
 
 app = Flask(__name__)
@@ -41,36 +44,49 @@ def login(): # -- TESTED
 def verify_credentials():
     """Verifies user credentials"""
     # TEST DB -- DONE
-    # Takes in email and password
-    email = request.form.get('email')
-    password = request.form.get('password')
-    # if email exists:
-    check_user = User.query.filter_by(email=email).first()
+    
+    # If someone already logged in, redirect to user profile:
+    if session['user']:
+        flash('Already logged in!')
+        return redirect('/user-profile')
+    # Else varify credentials and log user in
+    else:
+        # Takes in email and password
+        email = request.form.get('email')
+        password = request.form.get('password')
+        # if email exists:
 
-    if check_user:
-        # if password matches:
-        if check_user.password == password:
-            # redirect to user profile and add user to session
-            session['user'] = check_user.user_id
-            flash('Welcome back!')
-            return redirect('/user-profile')
+        check_user = get_user(email) 
+
+        if check_user:
+            # if password matches:
+            if check_user.password == password:
+                # redirect to user profile and add user to session
+                session['user'] = check_user.user_id
+                flash('Welcome back!')
+                return redirect('/user-profile')
+            # else redirect and flash invalid
+            else:
+                flash('Invalid credentials.')
+                return redirect('/login')
         # else redirect and flash invalid
         else:
-            flash('Invalid credentials.')
+            flash('Invalid credentials')
             return redirect('/login')
-    # else redirect and flash invalid
-    else:
-        flash('Invalid credentials')
-        return redirect('/login')
 
 
 @app.route('/logout', methods=['POST'])
 def log_user_out():
     """Logs user out and removes user from session."""
     
-    del session['user']
-    flash('Goodbye!')
-    return redirect('/')
+    # If no user in session, redirect to log in
+    if session['user']:
+        del session['user']
+        flash('Goodbye!')
+        return redirect('/')
+    else:
+        flash('No user logged in')
+        return redirect('/')
 
 
 @app.route('/register', methods=['GET'])
@@ -91,17 +107,17 @@ def add_new_user():
     email = request.form.get('email')
     password = request.form.get('password')
     # If email already in system:
-    check_user = User.query.filter_by(email=email).first()
+
+    # WROTE DB FUNCTION FOR THIS
+    check_user = get_user(email)
 
     if check_user:
         # Flash invalid email and redirect to login
         flash('Invalid credentials')
-        return redirect('/register')
+        return redirect('/login')
     # else create user and add to database
     else:
-        new_user = User(name=name, email=email, password=password)
-        db.session.add(new_user)
-        db.session.commit()
+        new_user = create_new_user(name, email, password)
         # add user to session
         session['user'] = new_user.user_id
         # redirect to initial profile setup
@@ -116,44 +132,6 @@ def create_profile(): # -- TESTED
     return render_template('profile-setup.html')
 
 
-@app.route('/create-profile', methods=['POST'])
-def update_stored_ingredients():
-    """ adds stored ingredients to database."""
-
-    # TEST DB -- TESTED
-    # get ingredients
-    ingredients = request.form.getlist('ingredients')
-    print "Ingredients:", ingredients
-    # ingredients = ingredients.split(',')
-    types = request.form.getlist('types')
-    print "Types:", types
-    # types = types.split(',')
-
-    # create store_ingredients
-    for i in range(len(ingredients)):
-        # If not in ingredients, add to ingredients:
-        if Ingredient.query.filter_by(ingredient_name=(ingredients[i])).first() is None:
-            ing_type = FoodType.query.filter_by(food_type=(types[i])).first()
-            new_ingredient = Ingredient(ingredient_name=(ingredients[i]), type_id=ing_type.type_id)
-            db.session.add(new_ingredient)
-        #else add to database
-        else:
-            pass
-        user_ingredient = Ingredient.query.filter_by(ingredient_name=(ingredients[i])).first()
-        user_ingredient_id = user_ingredient.ingredient_id
-        new_user_ingredient = StoredIngredient(ingredient_id=user_ingredient_id, 
-                                                user_id=session['user'],
-                                                added_at=datetime.now())
-        db.session.add(new_user_ingredient)
-
-    db.session.commit()
-        
-
-    # flash successfully added and redirect to user-profile
-    flash('Successfully added!')
-    return redirect('/user-profile')
-
-
 @app.route('/user-profile')
 def show_user_profile():
     """Renders profile information for specific user."""
@@ -163,67 +141,10 @@ def show_user_profile():
     # get user from session
     user_id = session['user']
     # pull up stored_ingredients and pass into template
-    user_ingredients = StoredIngredient.query.filter_by(user_id=user_id).all()
-    user_recipes = UserRecipe.query.filter_by(active=True).all()
+    user_recipes = get_active_user_recipes(user_id)
     # pull up active recipes on user_recipes and pass into template 
     # render profile template
-    return render_template('profile.html', ingredients=user_ingredients,
-            recipes=user_recipes)
-
-
-@app.route('/add-ingredients', methods=['POST'])
-def add_ingredients():
-    """ Add stored_ingredients."""
-
-    # TEST DB -- TESTED
-
-    ingredients = request.form.get('ingredients')
-    ingredients = ingredients.split(',')
-    types = request.form.get('types')
-    types = types.split(',')
-
-    for i in range(len(ingredients)):
-        if Ingredient.query.filter_by(ingredient_name=ingredients[i]).first() is None:
-            food_type = FoodType.query.filter_by(food_type=types[i]).one()
-            new_ingredient = Ingredient(ingredient_name=ingredients[i], 
-                type_id=food_type.type_id)
-            db.session.add(new_ingredient)
-            db.session.commit()
-        else:
-            new_ingredient = Ingredient.query.filter_by(ingredient_name=ingredients[i]).first()
-        new_user_ingredient = StoredIngredient(ingredient_id=new_ingredient.ingredient_id,
-                            user_id=session['user'],
-                            added_at=datetime.now())
-        db.session.add(new_user_ingredient)
-        db.session.commit()
-
-    flash('Successfully added!')
-    return redirect('/user-profile')
-
-
-@app.route('/remove-ingredients', methods=['POST'])
-def remove_ingredient():
-    """Remove Stored Ingredient for user."""
-
-    # TEST DB -- TESTED
-
-    ingredients = request.form.get('ingredients')
-    ingredients = ingredients.split(',')
-
-    for i in range(len(ingredients)):
-        main_ingredient = Ingredient.query.filter_by(ingredient_name=ingredients[i]).first()
-
-        if main_ingredient:
-            del_ingredient = StoredIngredient.query.filter_by(ingredient_id=main_ingredient.ingredient_id).first()
-            if del_ingredient:
-                db.session.delete(del_ingredient)
-                db.session.commit()
-            else:
-                pass
-        else:
-            pass
-    flash('Successfully deleted!')
-    return redirect('/user-profile')
+    return render_template('profile.html', recipes=user_recipes)
 
 
 @app.route('/plan-meal', methods=['GET'])
@@ -249,8 +170,20 @@ def show_meals():
     """ Pass ingredients into edamam API and show meal results."""
     
     # get ingredients from meal plan
-    ingredients = request.form.get("ingredients")
-    # ingredients = ','.join(ingredients)
+    # get ingredients
+    ingredients = request.form.getlist('ingredients')
+    types = request.form.getlist('types')
+
+    ingredient_rows = []
+
+    # create store_ingredients
+    for i in range(len(ingredients)):
+        new_ingredient = add_ingredient(ingredients[i], types[i])
+
+        ingredient_rows.append(new_ingredient)
+
+    # format ingredients to pass into EDAMAM API
+    ingredients = ','.join(ingredients)
     
     params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
     "app_key": os.environ['EDAMAM_SECRET_KEY'],
@@ -261,16 +194,24 @@ def show_meals():
 
     for recipe in results:
         # If recipe url currently not in Recipes
-        if Recipe.query.filter_by(url=recipe['recipe']['url']).first() is None:
+        recipe_result = get_recipe(recipe['recipe']['url'])
+        if recipe_result is None:
             # Create new recipe and add to Recipes
-            response_recipe = Recipe(recipe_name=recipe['recipe']['label'], 
-                        url=recipe['recipe']['url'], 
-                        image_url=recipe['recipe']['image'])
-            db.session.add(response_recipe)
+            create_recipe(recipe['recipe']['label'], recipe['recipe']['url'], 
+                recipe['recipe']['image'])
         else:
-            response_recipe = Recipe.query.filter_by(url=recipe['recipe']['url']).first() 
-        recipes.append(response_recipe)
-    db.session.commit()
+            pass
+        recipes.append(get_recipe(recipe['recipe']['url']))
+
+    # if recipe_id not in Recipe_ingredients:
+    for recipe in recipes:
+        recipe_ingredient = get_recipe_ingredient(recipe.recipe_id)
+        if recipe_ingredient is None:
+            # Add to recipe_ingredients and commit
+            for ingredient in ingredient_rows:
+                create_recipe_ingredient(recipe.recipe_id, ingredient.ingredient_id)
+        else:
+            pass
 
     return render_template('meal-plan.html', results=recipes)
 
@@ -279,20 +220,12 @@ def show_meals():
 def add_meal_to_plan():
     """Pass selected meals into UserRecipes."""
 
-    # TEST DB -- TESTED :D
-
     selected_recipes = request.form.getlist('recipes')
 
     for recipe_id in selected_recipes:
         recipe_id = int(recipe_id)
-        plan_recipe = UserRecipe.query.filter_by(recipe_id=recipe_id).first()
-        if plan_recipe:
-            plan_recipe.active = True
-        else:
-            new_user_recipe = UserRecipe(recipe_id=recipe_id, times_cooked=0, 
-                active=True, user_id=session['user'])
-            db.session.add(new_user_recipe)
-    db.session.commit()
+        
+        create_user_recipe(recipe_id, session['user'])
 
     flash('Successfully added!')
     return redirect('/user-profile')
@@ -302,8 +235,6 @@ def add_meal_to_plan():
 def update_user_meal():
     """Update user meal once made."""
 
-    # TEST DB -- TESTED 
-
     # Get recipe id from request.form
     recipe_id = request.form.get('recipe_id')
     # recipe_id = int(recipe_id)
@@ -311,21 +242,12 @@ def update_user_meal():
     session['recipe_id'] = recipe_id
 
     # Update user recipe to inactive and increment times_cooked by 1
-    user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
-        (UserRecipe.user_id == session['user'])).first()
+    mark_meal_made(recipe_id, session['user'])
 
-    if user_recipe:
-        user_recipe.active = False
-        user_recipe.times_cooked = user_recipe.times_cooked + 1
-
-        db.session.commit()
-
-        # **Flash 'Logged.' and redirect to user profile
-        flash('Logged.')
-        # **Change to score-recipe route
-        return redirect('/score-recipe')
-    else:
-        pass
+    # Flash 'Logged.' and redirect to user profile
+    flash('Logged.')
+    # **Change to score-recipe route
+    return redirect('/score-recipe')
 
 
 @app.route('/score-recipe', methods=['GET'])
@@ -341,25 +263,10 @@ def update_score():
 
     # TEST DB -- TESTED
 
-    # Get scores from request.form
-    effort = request.form.get('effort')
-    taste = request.form.get('taste')
-    # If user score for recipe already exists:
-    user_score = Score.query.filter((Score.recipe_id == session['recipe_id']) & 
-        (Score.user_id == session['user'])).first()
+    # Get score from request.form
+    score = request.form.get('score')
 
-    if user_score:
-        # update in database
-        user_score.effort_score = effort
-        user_score.taste_score = taste
-        user_score.rated_at = datetime.now()
-    # Else
-    else:
-        # Add new score row to database
-        new_score = Score(rated_at=datetime.now(), effort_score=int(effort), taste_score=int(taste),
-                    user_id=session['user'], recipe_id=session['recipe_id'])
-        db.session.add(new_score)
-    db.session.commit()
+    upsert_score(session['recipe_id'], session['user_id'], score)
 
     del session['recipe_id']
 
