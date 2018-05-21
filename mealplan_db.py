@@ -102,7 +102,7 @@ def get_recipe_ingredient(recipe_id): # -- TESTED
     return RecipeIngredient.query.filter_by(recipe_id=recipe_id).first()
 
 
-def create_recipe_ingredient(recipe_id, ingredient_id):
+def create_recipe_ingredient(recipe_id, ingredient_id): # -- TESTED
     """Create new recipe_ingredient in db."""
 
     new_recipe_ingredient = RecipeIngredient(recipe_id=recipe_id, 
@@ -117,11 +117,10 @@ def mark_meal_made(recipe_id, user_id):
     user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
         (UserRecipe.user_id == user_id)).first()
 
-    if user_recipe:
-        user_recipe.active = False
-        user_recipe.times_cooked = user_recipe.times_cooked + 1
+    user_recipe.active = False
+    user_recipe.times_cooked = user_recipe.times_cooked + 1
 
-        db.session.commit()
+    db.session.commit()
 
 
 def get_score(recipe_id, user_id):
