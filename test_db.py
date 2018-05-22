@@ -141,10 +141,14 @@ class FlaskTestsDatabase(TestCase):
         self.assertTrue(user_recipe.times_cooked == 1)
 
 
-
     def test_get_score(self):
         """Test retrieval of score given user and recipe id."""
-        pass
+        
+        user = get_user('jhacks@gmail.com')
+        recipe = get_recipe_by_url('test1.com')
+
+        score = get_score(recipe.recipe_id, user.user_id)
+        self.assertIsNotNone(score)
 
 
     def test_upsert_score(self):

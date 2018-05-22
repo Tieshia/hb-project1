@@ -111,7 +111,7 @@ def create_recipe_ingredient(recipe_id, ingredient_id): # -- TESTED
     db.session.commit()
 
 
-def mark_meal_made(recipe_id, user_id):
+def mark_meal_made(recipe_id, user_id): # -- TESTED
     """Update status of user_recipe."""
 
     user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
