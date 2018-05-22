@@ -25,18 +25,30 @@ app.secret_key = os.environ['FLASK_SECRET_KEY']
 app.jinja_env.undefined = StrictUndefined
 
 
+######################### INDEX ################################################
+
 @app.route('/')
 def index(): # -- TESTED!
     """Homepage."""
 
-    return render_template("homepage.html")
+    if session.get('user'):
+        flash('Already logged in!')
+        return redirect('/user-profile')
+    else:
+        return render_template("homepage.html")
 
+
+############################# LOGGING IN/OUT ###################################
 
 @app.route('/login', methods=['GET'])
 def login(): # -- TESTED
     """Get info from login page."""
-
-    return render_template("login.html")
+    
+    if session.get('user'):
+        flash('Already logged in!')
+        return redirect('/user-profile')
+    else:
+        return render_template("login.html")
 
 
 @app.route('/login', methods=['POST'])
@@ -87,6 +99,8 @@ def log_user_out():
         return redirect('/')
 
 
+##################### REGISTERING ##############################################
+
 @app.route('/register', methods=['GET'])
 def register():
     """Get info from registration page."""
@@ -120,6 +134,9 @@ def add_new_user():
         return render_template('profile.html')
 
 
+
+###################### SHOW USER PROFILE ######################################
+
 @app.route('/user-profile')
 def show_user_profile():
     """Renders profile information for specific user."""
@@ -132,6 +149,8 @@ def show_user_profile():
     # render profile template
     return render_template('profile.html', recipes=user_recipes)
 
+
+######################## GET MEAL PLAN ########################################
 
 @app.route('/plan-meal', methods=['GET'])
 def get_ingredients():
@@ -218,6 +237,9 @@ def add_meal_to_plan():
     flash('Successfully added!')
     return redirect('/user-profile')
 
+
+
+###################### TRACK MEAL MADE AND SCORE ###############################
 
 @app.route('/made-meal', methods=['POST'])
 def update_user_meal():

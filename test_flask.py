@@ -15,6 +15,13 @@ class FlaskTestsBasic(TestCase):
         # Show Flask errors that happen during tests
         app.config['TESTING'] = True
 
+        # Connect to test database
+        connect_to_db(app, "postgresql:///testdb")
+
+        # Create tables and add sample data
+        db.create_all()
+        example_data()
+
 
     def test_index(self):
         """Test homepage page."""
@@ -27,21 +34,77 @@ class FlaskTestsBasic(TestCase):
 
 
     def test_login(self):
+        """Test log in page."""
+
         result = self.client.get('/login')
         self.assertIn('Email', result.data)
         self.assertNotIn('Name', result.data)
 
 
-    def test_check_login(self):
-        """Test login page w/ correct credentials."""
+    def test_register(self):
+        """Test register page."""
 
-        result = self.client.post("/login",
-                                data={'email': "jhacks@gmail.com",
-                                'password': 'test'},
-                                follow_redirects=True)
-        self.assertIn('User Profile', result.data)
-        self.assertIn('Welcome back', result.data)
-        self.assertNotIn('Invalid credentials', result.data)
+        result = self.client.get('/register')
+        self.assertIn('Name', result.data)
+        self.assertNotIn('Log ', result.data)
+
+
+    def test_plan_meal(self):
+        """Test plan-meal.html."""
+
+        result = self.client.get('/plan-meal')
+        self.assertIn('Create Meal Plan', result.data)
+        self.assertNotIn('Log', result.data)
+
+
+    def test_score_recipe(self):
+        """Test score-recipe.html."""
+
+        result = self.client.get('/score-recipe')
+        self.assertIn('Score Recipe', result.data)
+        self.assertNotIn('Create Meal Plan', result.data)
+
+# class FlaskRouteTestswUserInSession(TestCase):
+#     """Flask tests for user in a session."""
+#     pass
+
+# class FlaskRouteTestswDatabase(TestCase):
+#     """Flask tests."""
+
+#     def setUp(self):
+#         """Stuff to do before every test."""
+
+#         # Get the Flask test client.
+#         self.client = app.test_client()
+
+#         # Show Flask errors that happen during tests
+#         app.config['TESTING'] = True
+
+#         # Connect to test database
+#         connect_to_db(app, "postgresql:///testdb")
+
+#         # Create tables and add sample data
+#         db.create_all()
+#         example_data()
+
+
+#     def tearDown(self):
+#         """Do at end of every test."""
+
+#         db.session.close()
+#         db.drop_all()
+
+
+#     def test_check_login(self):
+#         """Test login page w/ correct credentials."""
+
+#         result = self.client.post("/login",
+#                                 data={'email': "jhacks@gmail.com",
+#                                 'password': 'test'},
+#                                 follow_redirects=True)
+#         self.assertIn('User Profile', result.data)
+#         self.assertIn('Welcome back', result.data)
+#         self.assertNotIn('Invalid credentials', result.data)
 
 
     # def test_check_login_wrong_password(self):
