@@ -2,20 +2,6 @@
 {% block title %}User Profile{% endblock %}
 {% block content %}
 <h1>User Profile</h1>
-Pantry:
-<table style="width:100%">
-    <tr>
-        <th>Ingredient</th>
-        <th>Type</th>
-    </tr>
-
-{% for ingredient in ingredients %}
-    <tr>
-        <td>{{ ingredient.ingredient.ingredient_name }}</td>
-        <td>{{ ingredient.ingredient.food_type.food_type }}</td>
-    </tr>
-{% endfor %}
-</table>
 {% if recipes %}
 <form action='/made-meal' method='POST'>
     {% for recipe in recipes %}

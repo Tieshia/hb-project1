@@ -1,5 +1,5 @@
 from unittest import TestCase
-from model import connect_to_db, db, example_data
+from model import connect_to_db, db, example_data, User
 from server import app
 from flask import session
 
@@ -23,6 +23,13 @@ class FlaskTestsBasic(TestCase):
         self.assertIn('Welcome', result.data)
         self.assertIn('Log In', result.data)
         self.assertIn('Register', result.data)
+        self.assertNotIn('Profile', result.data)
+
+
+    def test_login(self):
+        result = self.client.get('/login')
+        self.assertIn('Email', result.data)
+        self.assertNotIn('Name', result.data)
 
 
     def test_check_login(self):
@@ -37,100 +44,90 @@ class FlaskTestsBasic(TestCase):
         self.assertNotIn('Invalid credentials', result.data)
 
 
-    def test_check_login_wrong_password(self):
-        """Test login page w/ incorrect password."""
+    # def test_check_login_wrong_password(self):
+    #     """Test login page w/ incorrect password."""
 
-        result = self.client.post("/login",
-                                data={'email': "jhacks@gmail.com",
-                                'password': 'test?'},
-                                follow_redirects=True)
-        self.assertIn('Invalid credentials', result.data)
-        self.assertIn('Log In', result.data)
-        self.assertNotIn('User Profile', result.data)
-
-
-    def test_check_login_wrong_email(self):
-        """Test login page w/ incorrect email."""
-
-        result = self.client.post('/login',
-                            data={'email': 'test@gmail.com',
-                            'password': 'test'},
-                            follow_redirects=True)
-        self.assertIn('Invalid credentials', result.data)
-        self.assertIn('Log In', result.data)
-        self.assertNotIn('User Profile', result.data)
+    #     result = self.client.post("/login",
+    #                             data={'email': "jhacks@gmail.com",
+    #                             'password': 'test?'},
+    #                             follow_redirects=True)
+    #     self.assertIn('Invalid credentials', result.data)
+    #     self.assertIn('Log In', result.data)
+    #     self.assertNotIn('User Profile', result.data)
 
 
-    def test_registration_new_user(self):
-        """Test adding new user from register page."""
+    # def test_check_login_wrong_email(self):
+    #     """Test login page w/ incorrect email."""
 
-        result = self.client.post('/register', 
-                            data={'name': 'Sarah',
-                            'email': 'sdevelops@gmail.com',
-                            'password': 'test'},
-                            follow_redirects=True)
-        self.assertIn('Set Up', result.data)
-        self.assertIn('name="ingredients"', result.data)
-        self.assertNotIn('Invalid credentials', result.data)
-        self.assertNotIn('Register', result.data)
+    #     result = self.client.post('/login',
+    #                         data={'email': 'test@gmail.com',
+    #                         'password': 'test'},
+    #                         follow_redirects=True)
+    #     self.assertIn('Invalid credentials', result.data)
+    #     self.assertIn('Log In', result.data)
+    #     self.assertNotIn('User Profile', result.data)
 
 
-    def test_create_profile(self):
-        """Test adding ingredients to database from set up page."""
+    # def test_registration_new_user(self):
+    #     """Test adding new user from register page."""
 
-        result = self.client.post('/create-profile',
-                            data={'ingredients': 'chicken,broccoli',
-                                'types': 'Proteins,Produce'},
-                            follow_redirects=True)
-        self.assertIn('User Profile', result.data)
-        self.assertIn('broccoli', result.data)
-        self.assertIn('Protein', result.data)
-        self.assertNotIn('Fritter', result.data)
+    #     result = self.client.post('/register', 
+    #                         data={'name': 'Sarah',
+    #                         'email': 'sdevelops@gmail.com',
+    #                         'password': 'test'},
+    #                         follow_redirects=True)
 
-
-    def test_user_profile(self):
-        """Test actually loading user ingredients in db from session id."""
-
-        result = self.client.get('/user-profile')
-
-        self.assertIn('User Profile', result.data)
-        self.assertIn('Produce', result.data)
-        self.assertIn('steak', result.data)
-        self.assertNotIn('chicken', result.data)
-        self.assertIn('No recipes to display', result.data)
-        self.assertNotIn('recipe1', result.data)
+    #     self.assertIn('User Profile', result.data)
+    #     self.assertNotIn('Invalid credentials', result.data)
+    #     self.assertNotIn('Register', result.data)
 
 
-    def test_add_ingredients(self):
-        """Test successfully adding ingredient input from user ingredients."""
+# class FlaskTestLoggedIn:
+#     """Flask tests requiring user in session."""
 
-        result = self.client.post('/add-ingredients',
-                            data={'ingredients': 'spinach',
-                            'types': 'Produce'},
-                            follow_redirects=True)
-        self.assertIn('Successfully added!', result.data)
-        self.assertIn('spinach', result.data)
-        self.assertIn('Produce', result.data)
+#     def setUp(self):
+#         """Stuff to do before every test."""
 
+#         app.config['TESTING'] = True
+#         app.config['SECRET_KEY'] = 'key'
+#         self.client = app.test_client()
 
-    def test_login(self):
-        """Test login page."""
+#         # Connect to test database
+#         connect_to_db(app, "postgresql:///testdb")
 
-        result = self.client.get('/login')
-        self.assertIn('Log In', result.data)
-        self.assertNotIn('Register', result.data)
+#         # Create tables and add sample data
+#         db.create_all()
+#         example_data()
 
+#         # Add user to session
+#         user = User.query.filter_by(email='jhacks@gmail.com')
 
-    def test_register(self):
-        """Test register page."""
-        
-        result = self.client.get('/register')
-        self.assertIn('Register', result.data)
-        self.assertNotIn('Log In', result.data)
+#         with self.client as c:
+#             with c.session_transaction() as sess:
+#                 sess['user'] = user.user_id
 
 
-    def test_create_profile(self):
-        """Test create profile route."""
+#     def test_logout(self):
+#         """Test actually logging out user."""
 
-        result = self.client.get('/create-profile')
-        self.assertIn('Set Up', result.data)
+#         result = self.client.post('/logout')
+
+#         self.assertIn('Goodbye', result.py)
+
+
+#     def test_user_profile(self):
+#         """Test actually loading user ingredients in db from session id."""
+
+#         result = self.client.get('/user-profile')
+
+#         self.assertIn('User Profile', result.data)
+#         self.assertIn('recipe2', result.data)
+#         self.assertNotIn('recipe1', result.data)
+
+
+################################################################################
+
+if __name__ == "__main__":
+    import unittest
+
+    unittest.main()

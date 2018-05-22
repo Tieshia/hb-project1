@@ -2,8 +2,6 @@ from unittest import TestCase
 from model import (User, Ingredient, RecipeIngredient, Recipe, UserRecipe, Score,
     connect_to_db, db, example_data, example_data_update_meal)
 from server import app
-from seed import load_food_type
-from flask import session
 from mealplan_db import * 
 
 class FlaskTestsDatabase(TestCase):

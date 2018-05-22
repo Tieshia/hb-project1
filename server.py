@@ -12,7 +12,6 @@ from mealplan_db import (get_user, create_new_user, get_active_user_recipes,
     create_user_recipe, get_ingredient, get_ingredient_type, create_ingredient,
     add_ingredient, get_recipe_by_url, get_recipe_by_id, create_recipe, get_recipe_ingredient, 
     create_recipe_ingredient, mark_meal_made, get_score, upsert_score)
-
 from model import connect_to_db
 
 
@@ -27,7 +26,7 @@ app.jinja_env.undefined = StrictUndefined
 
 
 @app.route('/')
-def index(): # -- TESTED
+def index(): # -- TESTED!
     """Homepage."""
 
     return render_template("homepage.html")
@@ -43,10 +42,9 @@ def login(): # -- TESTED
 @app.route('/login', methods=['POST'])
 def verify_credentials():
     """Verifies user credentials"""
-    # TEST DB -- DONE
     
     # If someone already logged in, redirect to user profile:
-    if session['user']:
+    if session.get('user'):
         flash('Already logged in!')
         return redirect('/user-profile')
     # Else varify credentials and log user in
@@ -85,7 +83,7 @@ def log_user_out():
         flash('Goodbye!')
         return redirect('/')
     else:
-        flash('No user logged in')
+        flash('No user logged in.')
         return redirect('/')
 
 
@@ -99,8 +97,6 @@ def register():
 @app.route('/register', methods=['POST'])
 def add_new_user():
     """Add user to database."""
-
-    # TEST DB -- TESTED
 
     # Take user info
     name = request.form.get('name')
@@ -121,22 +117,12 @@ def add_new_user():
         # add user to session
         session['user'] = new_user.user_id
         # redirect to initial profile setup
-        return render_template('profile-setup.html')
-
-
-@app.route('/create-profile', methods=['GET'])
-def create_profile(): # -- TESTED
-    """ Initializes user preferences."""
-
-    # render create profile template
-    return render_template('profile-setup.html')
+        return render_template('profile.html')
 
 
 @app.route('/user-profile')
 def show_user_profile():
     """Renders profile information for specific user."""
-
-    # TEST DB -- TESTED
 
     # get user from session
     user_id = session['user']
@@ -195,6 +181,7 @@ def show_meals():
     for recipe in results:
         # If recipe url currently not in Recipes
         recipe_result = get_recipe(recipe['recipe']['url'])
+        # **MAKE DB FUNCTION**:
         if recipe_result is None:
             # Create new recipe and add to Recipes
             create_recipe(recipe['recipe']['label'], recipe['recipe']['url'], 
@@ -204,6 +191,7 @@ def show_meals():
         recipes.append(get_recipe(recipe['recipe']['url']))
 
     # if recipe_id not in Recipe_ingredients:
+    # **MAKE DB FUNCTION **
     for recipe in recipes:
         recipe_ingredient = get_recipe_ingredient(recipe.recipe_id)
         if recipe_ingredient is None:

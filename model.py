@@ -70,8 +70,6 @@ class Ingredient(db.Model):
     ingredient_name = db.Column(db.String(64))
     type_id = db.Column(db.Integer, db.ForeignKey('food_types.type_id'))
 
-    food_type = db.relationship('FoodType', backref='ingredients')
-
     def __repr__(self):
         """String representation of ingredient."""
 
@@ -129,9 +127,6 @@ class Score(db.Model):
     score = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
-
-    recipe = db.relationship('Recipe', backref='scores')
-
 
     def __repr__(self):
         """String representation of user score."""
