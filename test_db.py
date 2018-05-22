@@ -153,7 +153,14 @@ class FlaskTestsDatabase(TestCase):
 
     def test_upsert_score(self):
         """Test updating score record in database."""
-        pass
+         
+        user = get_user('jhacks@gmail.com')
+        recipe = get_recipe_by_url('test1.com')
+        upsert_score(recipe.recipe_id, user.user_id, 1)
+        updated_score = get_score(recipe.recipe_id, user.user_id)
+
+        self.assertIsNotNone(updated_score)
+        self.assertTrue(updated_score.score == 1)
 
 
 if __name__ == "__main__":

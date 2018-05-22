@@ -123,7 +123,7 @@ def mark_meal_made(recipe_id, user_id): # -- TESTED
     db.session.commit()
 
 
-def get_score(recipe_id, user_id):
+def get_score(recipe_id, user_id): # -- TESTED
     """Get score based on recipe and user id."""
 
     return Score.query.filter((Score.recipe_id == recipe_id) & 
