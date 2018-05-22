@@ -1,6 +1,6 @@
 from unittest import TestCase
 from model import (User, Ingredient, RecipeIngredient, Recipe, UserRecipe, Score,
-    connect_to_db, db, example_data, example_data_update_meal)
+    connect_to_db, db, example_data)
 from server import app
 from mealplan_db import * 
 
@@ -74,6 +74,14 @@ class FlaskTestsDatabase(TestCase):
         self.assertIsNotNone(test_recipe)
 
 
+    def test_add_json_response_to_recipes(self):
+        """Test addition of json response recipe to database."""
+
+        add_json_response_to_recipes('test7', 'test7.com', 'test7_image.com')
+        test_recipe = get_recipe_by_url('test7.com')
+        self.assertIsNotNone(test_recipe)
+
+
     def test_create_user_recipe(self):
         """Test addition of new user recipe to database."""
 
@@ -104,6 +112,13 @@ class FlaskTestsDatabase(TestCase):
         protein_ingredient = get_ingredient('steak')
         create_ingredient('chicken', protein_ingredient.type_id)
         new_ingredient = get_ingredient('chicken')
+        self.assertIsNotNone(new_ingredient)
+
+
+    def test_add_ingredient(self):
+        """Test addition of new ingredient to database based of type and name."""
+
+        new_ingredient = add_ingredient('chicken', 'Proteins')
         self.assertIsNotNone(new_ingredient)
 
 
@@ -160,6 +175,8 @@ class FlaskTestsDatabase(TestCase):
         self.assertIsNotNone(updated_score)
         self.assertTrue(updated_score.score == 1)
 
+
+################################################################################
 
 if __name__ == "__main__":
     import unittest

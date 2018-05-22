@@ -60,7 +60,7 @@ def create_ingredient(ingredient_name, type_id): # -- TESTED
     db.session.commit()
 
 
-def add_ingredient(ingredient_name, ingredient_type):
+def add_ingredient(ingredient_name, ingredient_type): # -- TESTED
     """Adds ingredient if not already in db."""
 
     ingredient = get_ingredient(ingredient_name)
@@ -69,7 +69,7 @@ def add_ingredient(ingredient_name, ingredient_type):
         #  Get food type
         ing_type = get_ingredient_type(ingredient_type)
         # Add new ingredient to db
-        create_ingredient(ingredients_name, ingredient_type)
+        create_ingredient(ingredient_name, ing_type.type_id)
     # Get ingredient and return
     return get_ingredient(ingredient_name)
 
@@ -95,6 +95,16 @@ def create_recipe(recipe_name, url, image_url): # -- TESTED
     db.session.add(response_recipe)
 
     db.session.commit()
+
+def add_json_response_to_recipes(recipe_name, url, image_url): # -- TESTED
+    """Create new recipe based on json response."""
+
+    recipe_result = get_recipe_by_url(url)
+    if recipe_result is None:
+        # Create new recipe and add to Recipes
+        create_recipe(recipe_name, url, image_url)
+    else:
+        pass
 
 
 def get_recipe_ingredient(recipe_id): # -- TESTED

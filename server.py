@@ -8,10 +8,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from mealplan_db import (get_user, create_new_user, get_active_user_recipes,
-    create_user_recipe, get_ingredient, get_ingredient_type, create_ingredient,
-    add_ingredient, get_recipe_by_url, get_recipe_by_id, create_recipe, get_recipe_ingredient, 
-    create_recipe_ingredient, mark_meal_made, get_score, upsert_score)
+from mealplan_db import *
 from model import connect_to_db
 
 
@@ -28,7 +25,7 @@ app.jinja_env.undefined = StrictUndefined
 ######################### INDEX ################################################
 
 @app.route('/')
-def index(): # -- TESTED!
+def index(): # -- TESTED
     """Homepage."""
 
     if session.get('user'):
@@ -46,70 +43,67 @@ def login(): # -- TESTED
     
     if session.get('user'):
         flash('Already logged in!')
-        return redirect('/user-profile')
+        return redirect('/user-profile') # -- TESTED
     else:
-        return render_template("login.html")
+        return render_template("login.html") # -- TESTED
 
 
 @app.route('/login', methods=['POST'])
-def verify_credentials():
+def verify_credentials(): # -- TESTED
     """Verifies user credentials"""
     
-    # If someone already logged in, redirect to user profile:
-    if session.get('user'):
-        flash('Already logged in!')
-        return redirect('/user-profile')
-    # Else varify credentials and log user in
-    else:
-        # Takes in email and password
-        email = request.form.get('email')
-        password = request.form.get('password')
-        # if email exists:
+    # Takes in email and password
+    email = request.form.get('email')
+    password = request.form.get('password')
+    # if email exists:
 
-        check_user = get_user(email) 
+    check_user = get_user(email) 
 
-        if check_user:
-            # if password matches:
-            if check_user.password == password:
-                # redirect to user profile and add user to session
-                session['user'] = check_user.user_id
-                flash('Welcome back!')
-                return redirect('/user-profile')
-            # else redirect and flash invalid
-            else:
-                flash('Invalid credentials.')
-                return redirect('/login')
+    if check_user:
+        # if password matches:
+        if check_user.password == password:
+            # redirect to user profile and add user to session
+            session['user'] = check_user.user_id
+            flash('Welcome back!')
+            return redirect('/user-profile') # -- TESTED
         # else redirect and flash invalid
         else:
-            flash('Invalid credentials')
-            return redirect('/login')
+            flash('Invalid credentials.') 
+            return redirect('/login') # -- TESTED
+    # else redirect and flash invalid
+    else:
+        flash('Invalid credentials')
+        return redirect('/login') # -- TESTED
 
 
 @app.route('/logout', methods=['POST'])
-def log_user_out():
+def log_user_out(): # -- TESTED
     """Logs user out and removes user from session."""
     
     # If no user in session, redirect to log in
-    if session['user']:
+    if session.get('user'):
         del session['user']
         flash('Goodbye!')
-        return redirect('/')
+        return redirect('/') # -- TESTED
     else:
         flash('No user logged in.')
-        return redirect('/')
+        return redirect('/') # -- TESTED
 
 
 ##################### REGISTERING ##############################################
 
 @app.route('/register', methods=['GET'])
-def register():
+def register(): # -- TESTED
     """Get info from registration page."""
-
-    return render_template("register.html")
+    if session.get('user'):
+        flash('User already logged in')
+        return redirect('/user-profile') # -- TESTED
+    else:
+        return render_template("register.html") # -- TESTED
 
 
 @app.route('/register', methods=['POST'])
-def add_new_user():
+def add_new_user(): # -- TESTED
     """Add user to database."""
 
     # Take user info
@@ -118,12 +112,10 @@ def add_new_user():
     password = request.form.get('password')
     # If email already in system:
 
-    # WROTE DB FUNCTION FOR THIS
     check_user = get_user(email)
-
     if check_user:
         # Flash invalid email and redirect to login
-        flash('Invalid credentials')
+        flash('Invalid credentials') # -- TESTED
         return redirect('/login')
     # else create user and add to database
     else:
@@ -131,14 +123,13 @@ def add_new_user():
         # add user to session
         session['user'] = new_user.user_id
         # redirect to initial profile setup
-        return render_template('profile.html')
-
+        return redirect('/user-profile') # -- TESTED
 
 
 ###################### SHOW USER PROFILE ######################################
 
 @app.route('/user-profile')
-def show_user_profile():
+def show_user_profile(): # -- TESTED
     """Renders profile information for specific user."""
 
     # get user from session
@@ -147,20 +138,22 @@ def show_user_profile():
     user_recipes = get_active_user_recipes(user_id)
     # pull up active recipes on user_recipes and pass into template 
     # render profile template
-    return render_template('profile.html', recipes=user_recipes)
+    # if not user_recipes:
+    #     user_recipes = None
+    return render_template('profile.html', recipes=user_recipes) # -- TESTED
 
 
 ######################## GET MEAL PLAN ########################################
 
 @app.route('/plan-meal', methods=['GET'])
-def get_ingredients():
+def get_ingredients(): # -- TESTED
     """ Get user specified ingredients and show possible meals."""
 
     # return template for ingredient items
     return render_template('plan-meal.html')
 
 
-def get_recipes(payload):
+def get_recipes(payload): # -- TESTED
     """Get meal results from spoonacular."""
 
     # pass into EDAMAM api
@@ -181,12 +174,10 @@ def show_meals():
 
     ingredient_rows = []
 
-    # create store_ingredients
+    # create ingredient
     for i in range(len(ingredients)):
         new_ingredient = add_ingredient(ingredients[i], types[i])
-
         ingredient_rows.append(new_ingredient)
-
     # format ingredients to pass into EDAMAM API
     ingredients = ','.join(ingredients)
     
@@ -199,18 +190,11 @@ def show_meals():
 
     for recipe in results:
         # If recipe url currently not in Recipes
-        recipe_result = get_recipe(recipe['recipe']['url'])
-        # **MAKE DB FUNCTION**:
-        if recipe_result is None:
-            # Create new recipe and add to Recipes
-            create_recipe(recipe['recipe']['label'], recipe['recipe']['url'], 
-                recipe['recipe']['image'])
-        else:
-            pass
+        add_json_response_to_recipes(recipe['recipe']['label'], 
+            recipe['recipe']['url'], recipe['recipe']['image'])
         recipes.append(get_recipe(recipe['recipe']['url']))
 
     # if recipe_id not in Recipe_ingredients:
-    # **MAKE DB FUNCTION **
     for recipe in recipes:
         recipe_ingredient = get_recipe_ingredient(recipe.recipe_id)
         if recipe_ingredient is None:
@@ -261,7 +245,7 @@ def update_user_meal():
 
 
 @app.route('/score-recipe', methods=['GET'])
-def get_user_score():
+def get_user_score(): # -- TESTED
     """Renders template for collecting user info."""
     
     return render_template('score-recipe.html')
