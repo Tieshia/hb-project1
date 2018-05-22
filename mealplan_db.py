@@ -73,6 +73,7 @@ def add_ingredient(ingredient_name, ingredient_type):
     # Get ingredient and return
     return get_ingredient(ingredient_name)
 
+
 def get_recipe_by_id(recipe_id): # -- TESTED
     """Returns recipe by recipe_id."""
 
@@ -130,7 +131,7 @@ def get_score(recipe_id, user_id): # -- TESTED
         (Score.user_id == user_id)).first()
 
 
-def upsert_score(recipe_id, user_id, score):
+def upsert_score(recipe_id, user_id, score): # -- TESTED
     """Add/update score based on recipe and user_id."""
 
     user_score = get_score(recipe_id, user_id)

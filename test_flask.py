@@ -75,6 +75,43 @@ class FlaskTestsBasic(TestCase):
         self.assertNotIn('Register', result.data)
 
 
+    def test_create_profile(self):
+        """Test adding ingredients to database from set up page."""
+
+        result = self.client.post('/create-profile',
+                            data={'ingredients': 'chicken,broccoli',
+                                'types': 'Proteins,Produce'},
+                            follow_redirects=True)
+        self.assertIn('User Profile', result.data)
+        self.assertIn('broccoli', result.data)
+        self.assertIn('Protein', result.data)
+        self.assertNotIn('Fritter', result.data)
+
+
+    def test_user_profile(self):
+        """Test actually loading user ingredients in db from session id."""
+
+        result = self.client.get('/user-profile')
+
+        self.assertIn('User Profile', result.data)
+        self.assertIn('Produce', result.data)
+        self.assertIn('steak', result.data)
+        self.assertNotIn('chicken', result.data)
+        self.assertIn('No recipes to display', result.data)
+        self.assertNotIn('recipe1', result.data)
+
+
+    def test_add_ingredients(self):
+        """Test successfully adding ingredient input from user ingredients."""
+
+        result = self.client.post('/add-ingredients',
+                            data={'ingredients': 'spinach',
+                            'types': 'Produce'},
+                            follow_redirects=True)
+        self.assertIn('Successfully added!', result.data)
+        self.assertIn('spinach', result.data)
+        self.assertIn('Produce', result.data)
+
 
     def test_login(self):
         """Test login page."""
