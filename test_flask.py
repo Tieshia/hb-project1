@@ -264,7 +264,7 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
         self.assertNotIn('Apple Fritter', result.data)
 
 
-    def test_check_meal(self): # ** YOU ARE HERE **
+    def test_check_meal(self):
         """Test if meal checked being passed in to user profile."""
 
         recipe = Recipe.query.filter_by(url='test3.com').first()
@@ -275,6 +275,22 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
 
         self.assertIn('test3', result.data)
         self.assertNotIn('test1', result.data)
+        self.assertIn('Successfully added!', result.data)
+        self.assertIn('User Profile', result.data)
+
+
+    def test_made_meal(self):
+        """Test if user meal updated once marked as made."""
+
+        recipe = Recipe.query.filter_by(url='test2.com').first()
+        recipe_id = str(recipe.recipe_id)
+
+        result = self.client.post('/made-meal', data={'recipe_id': recipe_id},
+                            follow_redirects=True)
+
+        self.assertIn('Logged, please score', result.data)
+        self.assertNotIn('User Profile', result.data)
+        self.assertIn('How was your meal?', result.data)
 
 
 

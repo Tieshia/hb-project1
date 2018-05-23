@@ -207,7 +207,7 @@ def show_meals(): # -- TESTED
     return render_template('meal-plan.html', results=recipes)
 
 
-@app.route('/check-meal', methods=['POST']) # ** YOU ARE HERE **
+@app.route('/check-meal', methods=['POST']) # -- TESTED
 def add_meal_to_plan():
     """Pass selected meals into UserRecipes."""
 
@@ -226,7 +226,7 @@ def add_meal_to_plan():
 ###################### TRACK MEAL MADE AND SCORE ###############################
 
 @app.route('/made-meal', methods=['POST'])
-def update_user_meal():
+def update_user_meal(): # -- TESTED
     """Update user meal once made."""
 
     # Get recipe id from request.form
@@ -238,8 +238,8 @@ def update_user_meal():
     # Update user recipe to inactive and increment times_cooked by 1
     mark_meal_made(recipe_id, session['user'])
 
-    # Flash 'Logged.' and redirect to user profile
-    flash('Logged.')
+    # Flash 'Logged.' and redirect to score-recipe
+    flash('Logged, please score your recipe.')
     # **Change to score-recipe route
     return redirect('/score-recipe')
 
