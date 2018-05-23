@@ -255,12 +255,10 @@ def get_user_score(): # -- TESTED
 def update_score():
     """Adds/updates user score for recipe."""
 
-    # TEST DB -- TESTED
-
     # Get score from request.form
     score = request.form.get('score')
 
-    upsert_score(session['recipe_id'], session['user_id'], score)
+    upsert_score(session['recipe_id'], session['user'], score)
 
     del session['recipe_id']
 

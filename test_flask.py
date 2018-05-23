@@ -280,7 +280,7 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
 
 
     def test_made_meal(self):
-        """Test if user meal updated once marked as made."""
+        """Test if redirects work as expected."""
 
         recipe = Recipe.query.filter_by(url='test2.com').first()
         recipe_id = str(recipe.recipe_id)
@@ -293,6 +293,22 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
         self.assertIn('How was your meal?', result.data)
 
 
+    def test_score_recipe(self):
+        """Tests if redirects words as expected."""
+        
+        recipe = Recipe.query.filter_by(url='test2.com').first()
+        recipe_id = str(recipe.recipe_id)
+
+        with self.client as c:
+            with c.session_transaction() as sess:
+                sess['recipe_id'] = recipe_id
+
+        result = self.client.post('/score-recipe', data={'score': '5'},
+                                follow_redirects=True)
+
+        self.assertIn('User Profile', result.data)
+        self.assertIn('Successfully updated', result.data)
+        self.assertNotIn('Log In', result.data)
 
 
 ################################################################################
