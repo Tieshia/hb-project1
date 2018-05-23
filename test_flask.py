@@ -1,6 +1,9 @@
 from unittest import TestCase
+import os
+import json
 from model import connect_to_db, db, example_data, User
 from server import app
+import server
 from flask import session
 
 class FlaskTestsBasic(TestCase):
@@ -234,6 +237,34 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
         self.assertIn('User Profile', result.data)
         self.assertNotIn('Log In', result.data)
         self.assertIn('User already logged in', result.data)
+
+
+    def test_show_meals(self):
+        """Test resulting reciped from API call."""
+
+        # Make mock
+        def _mock_get_recipes(params):
+            """Makes mock API return result."""
+            with open('static/edamam.txt') as json_file:
+                data = json.load(json_file)
+            return data['hits']
+
+        server.get_recipes = _mock_get_recipes
+
+        result = self.client.post('/plan-meal', data={'app_id': os.environ['EDAMAM_SECRET_ID'],
+                                                    'app_key': os.environ['EDAMAM_SECRET_KEY'],
+                                                    'ingredients': ['chicken', 'broccoli'],
+                                                    'types': ['Proteins', 'Produce']})
+
+        self.assertIn('Chicken Broccoli Divan', result.data)
+        self.assertIn('http://www.thekitchn.com/recipe-chicken-broccoli-alfredo-229203', 
+            result.data)
+        self.assertIn('<img', result.data)
+        self.assertIn('<h3>', result.data)
+        self.assertNotIn('Apple Fritter', result.data)
+
+
+
 
 
 ################################################################################

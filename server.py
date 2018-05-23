@@ -192,7 +192,7 @@ def show_meals():
         # If recipe url currently not in Recipes
         add_json_response_to_recipes(recipe['recipe']['label'], 
             recipe['recipe']['url'], recipe['recipe']['image'])
-        recipes.append(get_recipe(recipe['recipe']['url']))
+        recipes.append(get_recipe_by_url(recipe['recipe']['url']))
 
     # if recipe_id not in Recipe_ingredients:
     for recipe in recipes:
