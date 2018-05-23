@@ -164,7 +164,7 @@ def get_recipes(payload): # -- TESTED
 
 
 @app.route('/plan-meal', methods=['POST'])
-def show_meals():
+def show_meals(): # -- TESTED
     """ Pass ingredients into edamam API and show meal results."""
     
     # get ingredients from meal plan
@@ -207,7 +207,7 @@ def show_meals():
     return render_template('meal-plan.html', results=recipes)
 
 
-@app.route('/check-meal', methods=['POST'])
+@app.route('/check-meal', methods=['POST']) # ** YOU ARE HERE **
 def add_meal_to_plan():
     """Pass selected meals into UserRecipes."""
 

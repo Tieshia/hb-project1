@@ -1,7 +1,7 @@
 from unittest import TestCase
 import os
 import json
-from model import connect_to_db, db, example_data, User
+from model import connect_to_db, db, example_data, User, Recipe
 from server import app
 import server
 from flask import session
@@ -239,30 +239,39 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
         self.assertIn('User already logged in', result.data)
 
 
-    def test_show_meals(self):
-        """Test resulting reciped from API call."""
+    # def test_show_meals(self):
+    #     """Test resulting recipes from API call."""
 
-        # Make mock
-        def _mock_get_recipes(params):
-            """Makes mock API return result."""
-            with open('static/edamam.txt') as json_file:
-                data = json.load(json_file)
-            return data['hits']
+    #     # Make mock
+    #     def _mock_get_recipes(params):
+    #         """Makes mock API return result."""
+    #         with open('static/edamam.txt') as json_file:
+    #             data = json.load(json_file)
+    #         return data['hits']
 
-        server.get_recipes = _mock_get_recipes
+    #     server.get_recipes = _mock_get_recipes
 
-        result = self.client.post('/plan-meal', data={'app_id': os.environ['EDAMAM_SECRET_ID'],
-                                                    'app_key': os.environ['EDAMAM_SECRET_KEY'],
-                                                    'ingredients': ['chicken', 'broccoli'],
-                                                    'types': ['Proteins', 'Produce']})
+    #     result = self.client.post('/plan-meal', data={'app_id': os.environ['EDAMAM_SECRET_ID'],
+    #                                                 'app_key': os.environ['EDAMAM_SECRET_KEY'],
+    #                                                 'ingredients': ['chicken', 'broccoli'],
+    #                                                 'types': ['Proteins', 'Produce']})
 
-        self.assertIn('Chicken Broccoli Divan', result.data)
-        self.assertIn('http://www.thekitchn.com/recipe-chicken-broccoli-alfredo-229203', 
-            result.data)
-        self.assertIn('<img', result.data)
-        self.assertIn('<h3>', result.data)
-        self.assertNotIn('Apple Fritter', result.data)
+    #     self.assertIn('Chicken Broccoli Divan', result.data)
+    #     self.assertIn('http://www.thekitchn.com/recipe-chicken-broccoli-alfredo-229203', 
+    #         result.data)
+    #     self.assertIn('<img', result.data)
+    #     self.assertIn('<h3>', result.data)
+    #     self.assertNotIn('Apple Fritter', result.data)
 
+
+    def test_check_meal(self): # ** YOU ARE HERE **
+        """Test if meal checked being passed in to user profile."""
+
+        recipe = Recipe.query.filter_by(url='test3.com').first()
+        recipe_id = str(recipe.recipe_id)
+
+        result = self.client.post('/check-meal', data={'recipes': [recipe_id]}, 
+                            follow_redirects=True)
 
 
 
