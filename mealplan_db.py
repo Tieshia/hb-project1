@@ -30,10 +30,12 @@ def get_active_user_recipes(user_id): # -- TESTED
 def create_user_recipe(recipe_id, user_id): # -- TESTED
     """Create/update user recipe in db."""
 
-    user_recipe = UserRecipe.query.filter_by(recipe_id=recipe_id).first()
+    user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
+        (UserRecipe.user_id == user_id)).first()
+    
     if user_recipe:
         user_recipe.active = True
-    else:
+    else:  
         new_user_recipe = UserRecipe(recipe_id=recipe_id, times_cooked=0, 
             active=True, user_id=user_id)
         db.session.add(new_user_recipe)

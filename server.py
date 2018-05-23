@@ -186,13 +186,13 @@ def show_meals(): # -- TESTED
     "q": ingredients}
     results = get_recipes(params)
 
-    recipes=[]
+    recipes=set()
 
     for recipe in results:
         # If recipe url currently not in Recipes
         add_json_response_to_recipes(recipe['recipe']['label'], 
             recipe['recipe']['url'], recipe['recipe']['image'])
-        recipes.append(get_recipe_by_url(recipe['recipe']['url']))
+        recipes.add(get_recipe_by_url(recipe['recipe']['url']))
 
     # if recipe_id not in Recipe_ingredients:
     for recipe in recipes:
