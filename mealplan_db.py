@@ -32,7 +32,7 @@ def create_user_recipe(recipe_id, user_id): # -- TESTED
 
     user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
         (UserRecipe.user_id == user_id)).first()
-    
+
     if user_recipe:
         user_recipe.active = True
     else:  
@@ -49,7 +49,7 @@ def get_ingredient(ingredient_name): # -- TESTED
 
 
 def get_ingredient_type(ingredient_type): # -- TESTED
-    """Returns type id based on ingredient type."""
+    """Returns food type based on ingredient type."""
 
     return FoodType.query.filter_by(food_type=ingredient_type).first()
 

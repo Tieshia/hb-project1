@@ -20,6 +20,7 @@ class FlaskTestsDatabase(TestCase):
         # Create tables and add sample data
         db.create_all()
         example_data()
+        # import pdb; pdb.set_trace()
 
 
     def tearDown(self):

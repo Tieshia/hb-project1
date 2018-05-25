@@ -252,7 +252,7 @@ def get_user_score(): # -- TESTED
 
 
 @app.route('/score-recipe', methods=['POST'])
-def update_score():
+def update_score(): # -- TESTED
     """Adds/updates user score for recipe."""
 
     # Get score from request.form
