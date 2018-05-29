@@ -2,6 +2,7 @@
 
 import os
 import requests
+from random import choice
 import pdb
 from jinja2 import StrictUndefined
 
@@ -135,13 +136,15 @@ def show_user_profile(): # -- TESTED
 
     # get user from session
     user_id = session['user']
-    # pull up stored_ingredients and pass into template
-    user_recipes = get_active_user_recipes(user_id)
+    # pull up highest rated recipes and pass into template
+    highest_random_recipes = get_random_highest_rated_recipes()
     # pull up active recipes on user_recipes and pass into template 
+    user_recipes = get_active_user_recipes(user_id)
     # render profile template
     # if not user_recipes:
     #     user_recipes = None
-    return render_template('profile.html', recipes=user_recipes) # -- TESTED
+    return render_template('profile.html', highest=highest_random_recipes,
+        recipes=user_recipes) # -- ** REQUIRES NEW TESTING **
 
 
 ######################## GET MEAL PLAN ########################################
@@ -206,11 +209,11 @@ def add_meal_to_plan():
     """Pass selected meals into UserRecipes."""
 
     selected_recipes = request.form.getlist('recipes')
-
-    for recipe_id in selected_recipes:
-        recipe_id = int(recipe_id)
-        
-        create_user_recipe(recipe_id, session['user'])
+    if selected_recipes:
+        for recipe_id in selected_recipes:
+            recipe_id = int(recipe_id)
+            
+            create_user_recipe(recipe_id, session['user'])
 
     flash('Successfully added!')
     return redirect('/user-profile')

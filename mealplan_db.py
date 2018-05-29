@@ -3,6 +3,7 @@
 from datetime import datetime
 from model import (connect_to_db, db, User, FoodType, Recipe, Ingredient, 
     RecipeIngredient, UserRecipe, Score)
+from random import choice
 
 
 def get_user(email): # -- TESTED
@@ -170,3 +171,13 @@ def get_highest_rated_recipes():
         recipe = get_recipe_by_id(score.recipe_id)
         recipes.append(recipe)
     return recipes
+
+
+def get_random_highest_rated_recipes():
+    """Return selection of 3 highest rated recipes."""
+    recipes = get_highest_rated_recipes()
+    random_highest = set()
+
+    while len(random_highest) < 4:
+        random_highest.add(choice(recipes))
+    return random_highest

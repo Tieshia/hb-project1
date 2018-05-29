@@ -2,7 +2,24 @@
 {% block title %}User Profile{% endblock %}
 {% block content %}
 <h1>User Profile</h1>
+{% for recipe in highest%}
+<hr>
+<h2>Try these recipes:</h2>
+<form action='/check-meal' method='POST'>
+   <div>
+            <h3>{{ recipe.recipe_name }}</h3><br>
+            <a href="{{ recipe.url }}">
+                <img src="{{ recipe.image_url }}"><br>
+            </a>
+            <button type="submit" name="recipe_id" value="{{ recipe.recipe_id }}">
+                Add to mealplan!
+            </button>
+        </div> 
+</form>
+{% endfor %}
 {% if recipes %}
+<hr>
+<h2>Current Meal Plan</h2>
 <form action='/made-meal' method='POST'>
     {% for recipe in recipes %}
         <div>
@@ -19,6 +36,7 @@
 {% else %}
 <h3>No recipes to display.</h3>
 {% endif %}
+<hr>
 <form action="/plan-meal">
     <input type="submit" value="Create a meal plan!">
 </form>
