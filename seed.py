@@ -2,11 +2,11 @@
 
 import datetime
 import os
-from random import choice
+from random import choice, randint
 from sqlalchemy import func
 from faker import Faker
 
-from  mealplan_recipes import pass_ingredients_to_recipes
+from  mealplan_recipes import *
 from model import (User, FoodType, Recipe, Ingredient, 
     RecipeIngredient, UserRecipe, Score, connect_to_db, db, init_app)
 from mealplan_db import *
@@ -16,9 +16,8 @@ from mealplan_db import *
 fake = Faker()
 
 INGREDIENTS = {'Proteins': ['chicken', 'steak', 'tofu', 'eggs'],
-                'Produce': ['broccoli', 'carrots', 'mushrooms', 'spinach', 
-                    'tomatoes'],
-                'Grains and Pasta': ['rice', 'quinoa', 'bread']}
+                'Produce': ['broccoli', 'carrots', 'mushrooms'],
+                'Grains and Pasta': ['rice']}
 
 
 def load_food_type():
@@ -56,21 +55,48 @@ def load_fake_ingredients():
             create_ingredient(ingredient, food_type.type_id)
 
 
-def load_recipes():
+def load_recipes(INGREDIENTS):
     """Add recipes to the database."""
 
-    ingredients = []
-    # For key in dictionary
-    for key in INGREDIENTS:
-    # Randomly select one item from each key and add to ingredients list
-            ingredients.append(choice(INGREDIENTS[key]))
+    ingredients = combine_ingredients(INGREDIENTS)
+    # Pass nested list into EDAMAM API
+    results = get_diverse_recipes(ingredients)
+    # Pass nested list of results into recipes db
 
-    ingredients = ','.join(ingredients)
-    # Pass that list into EDAMAM API and save recipe results
-    results = pass_ingredients_to_recipes(ingredients)
-    recipes = save_recipes_and_ingredients_from_response(results)
-    # Randomly select 5 results and add to a randomly selected user
+    recipes = []
+    
+    for result in results:
+        recipes.append(save_recipes_from_response(result))
+    return recipes
 
+
+def load_recipe_ingredients():
+    """Add recipe ingredients to db."""
+    pass
+
+
+def load_fake_user_recipes():
+    """Add user recipes to db."""
+
+    recipes = Recipe.query.all()
+    users = User.query.all()
+
+    for user in users:
+        for i in range(15):
+            recipe = choice(recipes)
+            create_user_recipe(recipe.recipe_id, user.user_id)
+
+
+def load_fake_scores():
+    """Add scores for each user to db."""
+
+    users = User.query.all()
+    
+    for user in users:
+        recipes = UserRecipe.query.filter_by(user_id=user.user_id).all()
+        for recipe in recipes:
+            score = randint(1,5)
+            upsert_score(recipe.recipe_id, user.user_id, score)
 
 
 def init_app():
@@ -84,7 +110,10 @@ def init_app():
 
 if __name__ == "__main__":
     init_app()
-    db.create_all()
-    load_food_type()
-    load_fake_users()
-    load_fake_ingredients()
+    # db.create_all()
+    # load_food_type()
+    # load_fake_users()
+    # load_fake_ingredients()
+    # load_recipes()
+    load_fake_scores()
+

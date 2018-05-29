@@ -181,6 +181,8 @@ def show_meals(): # -- TESTED
         ingredient_rows.append(new_ingredient)
     # format ingredients to pass into EDAMAM API
     ingredients = ','.join(ingredients)
+
+    # ** pass ingredients to create_type_to_ingredient_dict **
     
     results = pass_ingredients_to_recipes(ingredients)
 

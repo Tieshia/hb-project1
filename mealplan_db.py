@@ -159,3 +159,14 @@ def upsert_score(recipe_id, user_id, score): # -- TESTED
                     user_id=user_id, recipe_id=recipe_id)
         db.session.add(new_score)
     db.session.commit() 
+
+
+def get_highest_rated_recipes():
+    """Return list of highest rated recipes."""
+
+    scores = Score.query.filter_by(score=5).all()
+    recipes = []
+    for score in scores:
+        recipe = get_recipe_by_id(score.recipe_id)
+        recipes.append(recipe)
+    return recipes

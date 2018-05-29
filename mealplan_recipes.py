@@ -19,18 +19,16 @@ def create_type_to_ingredient_dict(ingredients, food_types):
     return type_to_ing
 
 
-def combine_ingredients(ingredients, food_types):
+def combine_ingredients(ingredients_dict):
     """ Create combination of different types of ingredients."""
-    
-    type_to_ing = create_type_to_ingredient_dict(ingredients, food_types)
 
     ingredients = []
 
-    for protein in type_to_ing['Proteins']:
+    for protein in ingredients_dict['Proteins']:
         ingredients_inner = [protein]
-        for key in type_to_ing:
+        for key in ingredients_dict:
             if key != 'Proteins':
-                ingredients_inner.extend(type_to_ing[key])
+                ingredients_inner.extend(ingredients_dict[key])
         ingredients.append(ingredients_inner)
 
     return ingredients
@@ -69,7 +67,7 @@ def save_recipes_from_response(results):
     return recipes
 
 
-def save_recipe_ingredients(recipes, ingredients):
+def save_recipes_and_ingredients_from_response(recipes, ingredients):
     """Add recipe response for each ingredient."""
 
     for recipe in recipes:
@@ -78,26 +76,26 @@ def save_recipe_ingredients(recipes, ingredients):
             # Add to recipe_ingredients and commit
             for ingredient in ingredient_rows:
                 ingredient = get_ingredient(ingredient)
-                create_recipe_ingredient(recipe.recipe_id, ingredient.ingredient_id)
+                create_recipe_ingredient(recipe.recipe_id, 
+                    ingredient.ingredient_id)
         else:
             pass
 
 
 
-def get_diverse_recipes(ingredients, food_types):
+def get_diverse_recipes(ingredients_combos):
     """ Get diverse recipes from creating combination of ingredients."""
 
-    ingredient_combos = combine_ingredients(ingredients, food_types)
     results = []
 
-    if type(ingredient_combos[0]) == list:
-        for combo in ingredient_combos:
+    if type(ingredients_combos[0]) == list:
+        for combo in ingredients_combos:
             ingredients = ','.join(combo)
 
             results.append(pass_ingredients_to_recipes(ingredients))
 
     else:
-        ingredients = ','.join(ingredient_combos)
+        ingredients = ','.join(ingredients_combos)
 
         pass_ingredients_to_recipes(ingredients)       
 
