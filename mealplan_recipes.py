@@ -46,6 +46,44 @@ def get_recipes(payload):
     return data['hits']
 
 
+def pass_ingredients_to_recipes(ingredients):
+    """Pass ingredients into EDAMAM API and get response."""
+
+    params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
+                    "app_key": os.environ['EDAMAM_SECRET_KEY'],
+                    "q": ingredients}
+    results = get_recipes(params)
+    return results
+
+def save_recipes_from_response(results):
+    """Pass JSON response to recipes db."""
+
+    recipes=set()
+
+    for recipe in results:
+        # If recipe url currently not in Recipes
+        add_json_response_to_recipes(recipe['recipe']['label'], 
+            recipe['recipe']['url'], recipe['recipe']['image'])
+        recipes.add(get_recipe_by_url(recipe['recipe']['url']))
+
+    return recipes
+
+
+def save_recipe_ingredients(recipes, ingredients):
+    """Add recipe response for each ingredient."""
+
+    for recipe in recipes:
+        recipe_ingredient = get_recipe_ingredient(recipe.recipe_id)
+        if recipe_ingredient is None:
+            # Add to recipe_ingredients and commit
+            for ingredient in ingredient_rows:
+                ingredient = get_ingredient(ingredient)
+                create_recipe_ingredient(recipe.recipe_id, ingredient.ingredient_id)
+        else:
+            pass
+
+
+
 def get_diverse_recipes(ingredients, food_types):
     """ Get diverse recipes from creating combination of ingredients."""
 
@@ -56,17 +94,12 @@ def get_diverse_recipes(ingredients, food_types):
         for combo in ingredient_combos:
             ingredients = ','.join(combo)
 
-            params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
-                    "app_key": os.environ['EDAMAM_SECRET_KEY'],
-                    "q": ingredients}
-            results.append(get_recipes(params))
+            results.append(pass_ingredients_to_recipes(ingredients))
+
     else:
         ingredients = ','.join(ingredient_combos)
 
-            params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
-                    "app_key": os.environ['EDAMAM_SECRET_KEY'],
-                    "q": ingredients}
-            results.append(get_recipes(params))        
+        pass_ingredients_to_recipes(ingredients)       
 
     return results
 

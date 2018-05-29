@@ -9,6 +9,7 @@ from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 
 from mealplan_db import *
+from mealplan_recipes import pass_ingredients_to_recipes, save_recipes_from_response
 from model import connect_to_db
 
 
@@ -181,18 +182,9 @@ def show_meals(): # -- TESTED
     # format ingredients to pass into EDAMAM API
     ingredients = ','.join(ingredients)
     
-    params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
-    "app_key": os.environ['EDAMAM_SECRET_KEY'],
-    "q": ingredients}
-    results = get_recipes(params)
+    results = pass_ingredients_to_recipes(ingredients)
 
-    recipes=set()
-
-    for recipe in results:
-        # If recipe url currently not in Recipes
-        add_json_response_to_recipes(recipe['recipe']['label'], 
-            recipe['recipe']['url'], recipe['recipe']['image'])
-        recipes.add(get_recipe_by_url(recipe['recipe']['url']))
+    recipes = save_recipes_from_response(results)
 
     # if recipe_id not in Recipe_ingredients:
     for recipe in recipes:
