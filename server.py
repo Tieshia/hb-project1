@@ -57,9 +57,12 @@ def verify_credentials(): # -- TESTED
     # Takes in email and password
     email = request.form.get('email')
     password = request.form.get('password')
+    print "email:", email
+    print "pw:", password
     # if email exists:
 
     check_user = get_user(email) 
+    print "retrieved user"
 
     if check_user:
         # if password matches:
@@ -67,14 +70,17 @@ def verify_credentials(): # -- TESTED
             # redirect to user profile and add user to session
             session['user'] = check_user.user_id
             flash('Welcome back!')
+            print "valid user and redirecting"
             return redirect('/user-profile') # -- TESTED
         # else redirect and flash invalid
         else:
             flash('Invalid credentials.') 
+            print "invalid creds, pw wrong"
             return redirect('/login') # -- TESTED
     # else redirect and flash invalid
     else:
         flash('Invalid credentials')
+        print "invalid user"
         return redirect('/login') # -- TESTED
 
 

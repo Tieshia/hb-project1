@@ -1,7 +1,7 @@
 from unittest import TestCase
 import os
 import json
-from model import (User, FoodType, Recipe, Ingredient, StoredIngredient,
+from model import (User, FoodType, Recipe, Ingredient, RecipeIngredient,
     UserRecipe, Score, connect_to_db, db, example_data)
 from server import app
 import server

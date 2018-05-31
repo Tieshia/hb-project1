@@ -2,21 +2,23 @@
 {% block title %}User Profile{% endblock %}
 {% block content %}
 <h1>User Profile</h1>
-{% for recipe in highest%}
 <hr>
-<h2>Try these recipes:</h2>
+<h2>Recommended Recipes for You:</h2>
+
 <form action='/check-meal' method='POST'>
-   <div>
-            <h3>{{ recipe.recipe_name }}</h3><br>
-            <a href="{{ recipe.url }}">
-                <img src="{{ recipe.image_url }}"><br>
-            </a>
-            <button type="submit" name="recipe_id" value="{{ recipe.recipe_id }}">
-                Add to mealplan!
-            </button>
-        </div> 
+    {% for recipe in highest%}
+    <div>
+
+        <h3>{{ recipe.recipe_name }}</h3><br>
+        <a href="{{ recipe.url }}">
+            <img src="{{ recipe.image_url }}"><br>
+        </a>
+        <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"><br>
+    </div>
+    {% endfor %}
+    <input type="submit" value="Add to meal plan!">
 </form>
-{% endfor %}
+
 {% if recipes %}
 <hr>
 <h2>Current Meal Plan</h2>
@@ -43,4 +45,52 @@
 <form action="/logout" method="POST">
     <input type="submit" value="Logout">
 </form>
+
+<div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header text-center">
+                <h4 class="modal-title w-100 font-weight-bold">Sign in</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body mx-3">
+                <h3>Please enter the ingredients of your pantry here:</h3>
+                    <form class="profile-form" action="/plan-meal" method='POST'>
+                        <input type="text" name="ingredients" multiple>
+                        <select name="types" multiple>
+                            <option value="Dairy and Egg Products">Dairy and Egg Products</option>
+                            <option value="Proteins">Proteins</option>
+                            <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option>
+                            <option value="Produce">Produce</option>
+                            <option value="Nuts and Seeds">Nuts and Seeds</option>
+                            <option value="Grains and Pasta">Grains and Pasta</option>
+                        </select>
+                        <button type="button" class="new-button" onclick="addrow()">+</button><br>
+                        <input type="submit" class='submit-button'>
+                    </form>
+            </div> <!-- Modal div ender -->
+            <div class="modal-footer d-flex justify-content-center">
+                <button class="btn btn-default">Login</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center">
+    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalLoginForm">Create a Meal Plan!</a>
+</div>
+
+<!-- FUNCTIONALITY FOR ADDING NEW ROW FOR INGREDIENTS/TYPE -->
+<script type="text/javascript">
+    function addRow(evt) {
+        $('.new-button').remove();
+        $('.submit-button').remove()
+        $('.profile-form').append('<input type="text" name="ingredients"><select name="types"> <option value="Dairy and Egg Products">Dairy and Egg Products</option><option value="Proteins">Proteins</option> <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option> <option value="Produce">Produce</option> <option value="Nuts and Seeds">Nuts and Seeds</option> <option value="Grains and Pasta">Grains and Pasta</option> </select><button type="button" class="new-button" onclick="addrow()">+</button><br> <input type="submit" class="submit-button">');
+    }
+//  Add event listener to profile form, .on'click', pass middle argument that is name of new class, callback().
+    $('button').on('click', addRow);
+    $('.profile-form').on('click', '.new-button', addRow);
+</script>
 {% endblock %}
