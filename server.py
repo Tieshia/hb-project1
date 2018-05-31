@@ -155,14 +155,6 @@ def show_user_profile(): # -- TESTED
 
 ######################## GET MEAL PLAN ########################################
 
-@app.route('/plan-meal', methods=['GET'])
-def get_ingredients(): # -- TESTED
-    """ Get user specified ingredients and show possible meals."""
-
-    # return template for ingredient items
-    return render_template('plan-meal.html')
-
-
 def get_recipes(payload): # -- TESTED
     """Get meal results from spoonacular."""
 

@@ -32,6 +32,20 @@
             <button type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">
                 I made this!
             </button>
+            <div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="star-rating">
+        <span class="far fa-star" data-rating="1"></span>
+        <span class="far fa-star" data-rating="2"></span>
+        <span class="far fa-star" data-rating="3"></span>
+        <span class="far fa-star" data-rating="4"></span>
+        <span class="far fa-star" data-rating="5"></span>
+        <input type="hidden" name="whatever1" class="rating-value" value="2.56">
+      </div>
+    </div>
+  </div>
+</div>
         </div>
     {% endfor %}
 </form>
@@ -92,5 +106,28 @@
 //  Add event listener to profile form, .on'click', pass middle argument that is name of new class, callback().
     $('button').on('click', addRow);
     $('.profile-form').on('click', '.new-button', addRow);
+
+// For star rating
+    var $star_rating = $('.star-rating .fa');
+
+    var SetRatingStar = function() {
+      return $star_rating.each(function() {
+        if (parseInt($star_rating.siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+          return $(this).removeClass('far fa-star').addClass('fas fa-star');
+        } else {
+          return $(this).removeClass('fas fa-star').addClass('far fa-star');
+        }
+      });
+    };
+
+    $star_rating.on('click', function() {
+      $star_rating.siblings('input.rating-value').val($(this).data('rating'));
+      return SetRatingStar();
+    });
+
+    SetRatingStar();
+    $(document).ready(function() {
+
+    });
 </script>
 {% endblock %}
