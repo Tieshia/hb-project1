@@ -22,8 +22,8 @@
 {% if recipes %}
 <hr>
 <h2>Current Meal Plan</h2>
-<form action='/made-meal' method='POST'>
     {% for recipe in recipes %}
+    <form action='/made-meal' method='POST'>
         <div>
             <h3>{{ recipe.recipe.recipe_name }}</h3><br>
             <a href="{{ recipe.recipe.url }}">
@@ -32,23 +32,18 @@
             <button type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">
                 I made this!
             </button>
-            <div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="star-rating">
-        <span class="far fa-star" data-rating="1"></span>
-        <span class="far fa-star" data-rating="2"></span>
-        <span class="far fa-star" data-rating="3"></span>
-        <span class="far fa-star" data-rating="4"></span>
-        <span class="far fa-star" data-rating="5"></span>
-        <input type="hidden" name="whatever1" class="rating-value" value="2.56">
-      </div>
-    </div>
-  </div>
-</div>
+            <span class="star-cb-group">
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-5" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="5" /><label for="{{ recipe.recipe.recipe_id }}-5">5</label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-4" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="4" /><label for="{{ recipe.recipe.recipe_id }}-4">4</label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-3" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="3" /><label for="{{ recipe.recipe.recipe_id }}-3">3</label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-2" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="2" /><label for="{{ recipe.recipe.recipe_id }}-4">2</label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-1" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="1" /><label for="{{ recipe.recipe.recipe_id }}-1">1</label>
+              <input type="radio" id="rating-0" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="0" class="star-cb-clear" /><label for="rating-0">0</label>
+            </span>
         </div>
+        </form>
     {% endfor %}
-</form>
+
 {% else %}
 <h3>No recipes to display.</h3>
 {% endif %}
@@ -108,26 +103,15 @@
     $('.profile-form').on('click', '.new-button', addRow);
 
 // For star rating
-    var $star_rating = $('.star-rating .fa');
-
-    var SetRatingStar = function() {
-      return $star_rating.each(function() {
-        if (parseInt($star_rating.siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
-          return $(this).removeClass('far fa-star').addClass('fas fa-star');
-        } else {
-          return $(this).removeClass('fas fa-star').addClass('far fa-star');
-        }
-      });
-    };
-
-    $star_rating.on('click', function() {
-      $star_rating.siblings('input.rating-value').val($(this).data('rating'));
-      return SetRatingStar();
+    var logID = 'log',
+    log = $('<div id="'+logID+'"></div>');
+  $('body').append(log);
+    $('[type*="radio"]').change(function () {
+      var me = $(this);
+      console.log(me);
+      console.log($(me).data("id"));
+      log.html(me.attr('value'));
     });
 
-    SetRatingStar();
-    $(document).ready(function() {
-
-    });
 </script>
 {% endblock %}

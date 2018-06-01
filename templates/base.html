@@ -1,20 +1,98 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <style>
-        .star-rating {
-          line-height:32px;
-          font-size:1.25em;
-        }
-        .star-rating .fa-star   {
-            color: yellow;
-        }
-    </style>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+   <!--  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous"> -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <style>
+                @charset "UTF-8";
+        .star-cb-group {
+          /* remove inline-block whitespace */
+          font-size: 0;
+          /* flip the order so we can use the + and ~ combinators */
+          unicode-bidi: bidi-override;
+          direction: rtl;
+          /* the hidden clearer */
+        }
+        .star-cb-group * {
+          font-size: 1rem;
+        }
+        .star-cb-group > input {
+          display: none;
+        }
+        .star-cb-group > input + label {
+          /* only enough room for the star */
+          display: inline-block;
+          overflow: hidden;
+          text-indent: 9999px;
+          width: 1em;
+          white-space: nowrap;
+          cursor: pointer;
+        }
+        .star-cb-group > input + label:before {
+          display: inline-block;
+          text-indent: -9999px;
+          content: "☆";
+          color: #888;
+        }
+        .star-cb-group > input:checked ~ label:before, .star-cb-group > input + label:hover ~ label:before, .star-cb-group > input + label:hover:before {
+          content: "★";
+          color: #e52;
+          text-shadow: 0 0 1px #333;
+        }
+        .star-cb-group > .star-cb-clear + label {
+          text-indent: -9999px;
+          width: .5em;
+          margin-left: -.5em;
+        }
+        .star-cb-group > .star-cb-clear + label:before {
+          width: .5em;
+        }
+        .star-cb-group:hover > input + label:before {
+          content: "☆";
+          color: #888;
+          text-shadow: none;
+        }
+        .star-cb-group:hover > input + label:hover ~ label:before, .star-cb-group:hover > input + label:hover:before {
+          content: "★";
+          color: #e52;
+          text-shadow: 0 0 1px #333;
+        }
+
+        :root {
+          font-size: 2em;
+          font-family: Helvetica, arial, sans-serif;
+        }
+
+        body {
+          background: #333;
+          color: #888;
+        }
+
+        fieldset {
+          border: 0;
+          background: #222;
+          width: 5em;
+          border-radius: 1px;
+          padding: 1em 1.5em 0.9em;
+          margin: 1em auto;
+        }
+
+        #log {
+          margin: 1em auto;
+          width: 5em;
+          text-align: center;
+          background: transparent;
+        }
+
+        h1 {
+          text-align: center;
+        }
+
+    </style>
     <title>{% block title %}TITLE GOES HERE{% endblock %}</title>
 </head>
 <body>
