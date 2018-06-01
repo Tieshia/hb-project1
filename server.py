@@ -239,11 +239,11 @@ def update_user_meal(): # -- TESTED
     return redirect('/score-recipe')
 
 
-@app.route('/score-recipe', methods=['GET'])
-def get_user_score(): # -- TESTED
-    """Renders template for collecting user info."""
+# @app.route('/score-recipe', methods=['GET'])
+# def get_user_score(): # -- TESTED
+#     """Renders template for collecting user info."""
     
-    return render_template('score-recipe.html')
+#     return render_template('score-recipe.html')
 
 
 @app.route('/score-recipe', methods=['POST'])
@@ -259,7 +259,19 @@ def update_score(): # -- TESTED
 
     # redirect to user profile
     flash('Successfully updated')
+    # Return success dict and on js side have callback to execute DOM changes 
     return redirect('/user-profile')
+
+
+
+######################## AJAX TESTING ROUTES ###################################
+@app.route('/test', methods=['POST'])
+def test_rating_alert_with_ajax():
+    """Test to see if star rating can be passed via AJAX."""
+
+    score = request.form.get('score')
+
+    return "You rated the recipe {}".format(score)
 
 
 ################################################################################
@@ -274,6 +286,6 @@ if __name__ == "__main__":
     connect_to_db(app)
 
     # Use the DebugToolbar
-    # DebugToolbarExtension(app)
+    DebugToolbarExtension(app)
 
     app.run(host="0.0.0.0")

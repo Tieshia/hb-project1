@@ -27,7 +27,7 @@
         <div>
             <h3>{{ recipe.recipe.recipe_name }}</h3><br>
             <a href="{{ recipe.recipe.url }}">
-                <img src="{{ recipe.recipe.image_url }}"><br>
+                <img id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}"><br>
             </a>
             <button type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">
                 I made this!
@@ -92,6 +92,7 @@
 </div>
 
 <!-- FUNCTIONALITY FOR ADDING NEW ROW FOR INGREDIENTS/TYPE -->
+<!-- Star Rating Source: https://codepen.io/lsirivong/pen/ekBxI -->
 <script type="text/javascript">
     function addRow(evt) {
         $('.new-button').remove();
@@ -112,5 +113,22 @@
       // log.html(me.attr('value'));
     });
 
+// Code for selecting score and changing DOM
+    function showRecipeScore(result) {
+        let recipe_id = $("input:checked").data("id");
+        $(`img#${recipe_id}`).css({"opacity": 0.5, "filter": "grayscale(100%)"});
+        alert(result);
+    }
+
+    function passScoreValue(evt) {
+    
+    let formInputs = {
+        'score': $("input:checked").val(),
+    };
+    
+    $.post('/test', formInputs, showRecipeScore);
+    }
+
+    $('[type*="radio"]').on('click', passScoreValue);
 </script>
 {% endblock %}
