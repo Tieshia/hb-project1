@@ -32,14 +32,14 @@
             <button type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">
                 I made this!
             </button>
-            <span class="star-cb-group">
-              <input type="radio" id="{{ recipe.recipe.recipe_id }}-5" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="5" /><label for="{{ recipe.recipe.recipe_id }}-5">5</label>
-              <input type="radio" id="{{ recipe.recipe.recipe_id }}-4" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="4" /><label for="{{ recipe.recipe.recipe_id }}-4">4</label>
-              <input type="radio" id="{{ recipe.recipe.recipe_id }}-3" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="3" /><label for="{{ recipe.recipe.recipe_id }}-3">3</label>
-              <input type="radio" id="{{ recipe.recipe.recipe_id }}-2" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="2" /><label for="{{ recipe.recipe.recipe_id }}-4">2</label>
-              <input type="radio" id="{{ recipe.recipe.recipe_id }}-1" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="1" /><label for="{{ recipe.recipe.recipe_id }}-1">1</label>
-              <input type="radio" id="rating-0" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="0" class="star-cb-clear" /><label for="rating-0">0</label>
-            </span>
+            <div class="stars">
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-5" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="5" /><label for="{{ recipe.recipe.recipe_id }}-5"></label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-4" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="4" /><label for="{{ recipe.recipe.recipe_id }}-4"></label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-3" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="3" /><label for="{{ recipe.recipe.recipe_id }}-3"></label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-2" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="2" /><label for="{{ recipe.recipe.recipe_id }}-2"></label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-1" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="1" /><label for="{{ recipe.recipe.recipe_id }}-1"></label>
+              <input type="radio" id="{{ recipe.recipe.recipe_id }}-0" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="0" class="star-cb-clear" />
+            </div>
         </div>
         </form>
     {% endfor %}
@@ -103,14 +103,13 @@
     $('.profile-form').on('click', '.new-button', addRow);
 
 // For star rating
-    var logID = 'log',
-    log = $('<div id="'+logID+'"></div>');
-  $('body').append(log);
+    // var logID = 'log',
+    // log = $('<div id="'+logID+'"></div>');
+  // $('body').append(log);
     $('[type*="radio"]').change(function () {
       var me = $(this);
-      console.log(me);
-      console.log($(me).data("id"));
-      log.html(me.attr('value'));
+      console.log($("input:checked").val() + " is checked!");
+      // log.html(me.attr('value'));
     });
 
 </script>
