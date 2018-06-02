@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}Recipes{% endblock %}
+{% block content %}
+<h1>Recipes</h1>
+
+<form action="/check-meal" method='POST'>
+{% for recipe in recipes %}
+    <div>
+        <h3>{{ recipe.recipe_name }}</h3><br>
+        <a href="{{ recipe.url }}">
+            <img src="{{ recipe.image_url }}">
+        </a>
+        <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"> 
+        <br>
+    </div>
+{% endfor %}
+    <input type="submit" name="Add to meal plan!">
+</form>
+{% endblock %}

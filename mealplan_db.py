@@ -183,3 +183,9 @@ def get_random_highest_rated_recipes():
     while len(random_highest) < 4:
         random_highest.add(choice(recipes))
     return random_highest
+
+
+def get_all_recipes():
+    """Return a list of all recipes."""
+
+    return Recipe.query.all()

@@ -177,6 +177,15 @@ class FlaskTestsDatabase(TestCase):
         self.assertTrue(updated_score.score == 1)
 
 
+    def test_get_all_recipes(self):
+        """Test returning list of recipes in database."""
+
+        recipes = get_all_recipes()
+        print "# of recipes", len(recipes)
+
+        self.assertIsNotNone(recipes)
+
+
 ################################################################################
 
 if __name__ == "__main__":

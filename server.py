@@ -225,36 +225,28 @@ def add_meal_to_plan():
 @app.route('/made-and-scored-meal', methods=['POST'])
 def update_user_meal(): # -- TESTED
     """Update user meal once made."""
-    print "In update_user_meal"
+
     # Get recipe id from request.form
     recipe_id = request.form.get('recipe_id')
     # Get score from request.form
     score = request.form.get('score')
-    print "Recipe_id:", recipe_id
-    print "Score:", score
 
     upsert_score(int(recipe_id), session['user'], int(score))
-    print "upsert_score complete."
 
     # Update user recipe to inactive and increment times_cooked by 1
     mark_meal_made(int(recipe_id), session['user'])
-    print "mark_meal_made complete"
 
     # Return success dict and on js side have callback to execute DOM changes 
-    return ("Success")
+    return "Success"
 
+######################### RECIPE PAGES #########################################
 
-# @app.route('/score-recipe', methods=['GET'])
-# def get_user_score(): # -- TESTED
-#     """Renders template for collecting user info."""
-    
-#     return render_template('score-recipe.html')
+@app.route('/all-recipes')
+def show_all_recipes():
+    """Render template with all recipes in database."""
 
-
-# @app.route('/score-recipe', methods=['POST'])
-# def update_score(): # -- TESTED
-#     """Adds/updates user score for recipe."""
-
+    all_recipes = get_all_recipes()
+    return render_template('all-recipes.html', recipes=all_recipes)
 
 
 
