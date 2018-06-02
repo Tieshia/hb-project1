@@ -124,9 +124,10 @@
     
     let formInputs = {
         'score': $("input:checked").val(),
+        'recipe_id': $("input:checked").data("id"),
     };
     
-    $.post('/test', formInputs, showRecipeScore);
+    $.post('/made-and-scored-meal', formInputs, showRecipeScore);
     }
 
     $('[type*="radio"]').on('click', passScoreValue);

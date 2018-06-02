@@ -220,23 +220,28 @@ def add_meal_to_plan():
 
 ###################### TRACK MEAL MADE AND SCORE ###############################
 
-@app.route('/made-meal', methods=['POST'])
+
+# Troubleshoot with print statements for JS and python
+@app.route('/made-and-scored-meal', methods=['POST'])
 def update_user_meal(): # -- TESTED
     """Update user meal once made."""
-
+    print "In update_user_meal"
     # Get recipe id from request.form
     recipe_id = request.form.get('recipe_id')
-    # recipe_id = int(recipe_id)
-    # Add recipe id to session to carry over into score-recipe redirect
-    session['recipe_id'] = recipe_id
+    # Get score from request.form
+    score = request.form.get('score')
+    print "Recipe_id:", recipe_id
+    print "Score:", score
+
+    upsert_score(int(recipe_id), session['user'], int(score))
+    print "upsert_score complete."
 
     # Update user recipe to inactive and increment times_cooked by 1
-    mark_meal_made(recipe_id, session['user'])
+    mark_meal_made(int(recipe_id), session['user'])
+    print "mark_meal_made complete"
 
-    # Flash 'Logged.' and redirect to score-recipe
-    flash('Logged, please score your recipe.')
-    # **Change to score-recipe route
-    return redirect('/score-recipe')
+    # Return success dict and on js side have callback to execute DOM changes 
+    return ("Success")
 
 
 # @app.route('/score-recipe', methods=['GET'])
@@ -246,21 +251,11 @@ def update_user_meal(): # -- TESTED
 #     return render_template('score-recipe.html')
 
 
-@app.route('/score-recipe', methods=['POST'])
-def update_score(): # -- TESTED
-    """Adds/updates user score for recipe."""
+# @app.route('/score-recipe', methods=['POST'])
+# def update_score(): # -- TESTED
+#     """Adds/updates user score for recipe."""
 
-    # Get score from request.form
-    score = request.form.get('score')
 
-    upsert_score(session['recipe_id'], session['user'], score)
-
-    del session['recipe_id']
-
-    # redirect to user profile
-    flash('Successfully updated')
-    # Return success dict and on js side have callback to execute DOM changes 
-    return redirect('/user-profile')
 
 
 
