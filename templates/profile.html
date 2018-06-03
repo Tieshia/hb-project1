@@ -6,13 +6,16 @@
 <h2>Recommended Recipes for You:</h2>
 
 <form action='/check-meal' method='POST'>
-    {% for recipe in highest%}
+    {% for score, recipe in highest%}
     <div>
 
         <h3>{{ recipe.recipe_name }}</h3><br>
         <a href="{{ recipe.url }}">
-            <img src="{{ recipe.image_url }}"><br>
-        </a>
+            <img src="{{ recipe.image_url }}">
+        </a><br>
+        {% for i in range(score) %}
+        <span class="fa fa-star checked"></span>
+        {% endfor %}
         <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"><br>
     </div>
     {% endfor %}

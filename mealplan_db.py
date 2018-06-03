@@ -164,23 +164,37 @@ def upsert_score(recipe_id, user_id, score):  # -- TESTED
     db.session.commit()
 
 
-def get_highest_rated_recipes():
+def get_weighted_highest_average_rated_recipes():
     """Return list of highest rated recipes."""
 
-    scores = Score.query.filter_by(score=5).all()
+    scores = Score.query.all()
+    average_ratings = {}
     recipes = []
     for score in scores:
         recipe = get_recipe_by_id(score.recipe_id)
-        recipes.append(recipe)
-    return recipes
+        if average_ratings.get(recipe):
+            average_ratings[recipe]['ratings_sum'] += score.score
+            average_ratings[recipe]['count'] += 1
+        else:
+            average_ratings[recipe] = {'ratings_sum': score.score, 
+                                        'count': 1}
+    for key in average_ratings:
+        average_ratings[key]['average'] = ((average_ratings[key]['ratings_sum']/average_ratings[key]['count']) + 1) 
+        recipes.append((average_ratings[key]['average'], key))
+    highest_rated = sorted(recipes)[:10]
+    weighted_highest_ratings = []
+    for avg_score, recipe in highest_rated:
+        for i in range(average_ratings[recipe]['count']):
+            weighted_highest_ratings.append((avg_score, recipe))
+    return weighted_highest_ratings
 
 
 def get_random_highest_rated_recipes():
     """Return selection of 3 highest rated recipes."""
-    recipes = get_highest_rated_recipes()
+    recipes = get_weighted_highest_average_rated_recipes()
     random_highest = set()
 
-    while len(random_highest) < 4:
+    while len(random_highest) < 3:
         random_highest.add(choice(recipes))
     return random_highest
 
@@ -191,7 +205,7 @@ def get_all_recipes():
     return Recipe.query.all()
 
 
-def get_user_recipes(user_id):
+def get_user_scores(user_id):
     """Return a list of all recipes for user."""
 
-    return UserRecipe.query.filter_by(user_id=user_id).all()
+    return Score.query.filter_by(user_id=user_id).all()

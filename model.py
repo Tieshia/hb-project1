@@ -128,6 +128,8 @@ class Score(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     recipe_id = db.Column(db.Integer, db.ForeignKey('recipes.recipe_id'))
 
+    recipe = db.relationship('Recipe', backref='scores')
+
     def __repr__(self):
         """String representation of user score."""
 
