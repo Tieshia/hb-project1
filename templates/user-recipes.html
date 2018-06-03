@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}User Recipes{% endblock %}
+{% block content %}
+<h1>User Recipes</h1>
+{% if recipes %}
+{% for recipe in recipes %}
+    <div>
+        <form action='/check-meal', method='POST'>
+        <h3>{{ recipe.recipe.recipe_name }}</h3><br>
+        <a href="{{ recipe.recipe.url }}">
+            <img id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}"><br>
+        </a>
+        <button type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">
+            Add to meal plan!
+        </button>
+    </div>
+    </form>
+{% endfor %}
+{% else %}
+<h3>No recipes to display</h3>
+{% endif %}
+{% endblock %}

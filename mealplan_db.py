@@ -189,3 +189,9 @@ def get_all_recipes():
     """Return a list of all recipes."""
 
     return Recipe.query.all()
+
+
+def get_user_recipes(user_id):
+    """Return a list of all recipes for user."""
+
+    return UserRecipe.query.filter_by(user_id=user_id).all()

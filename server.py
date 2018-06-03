@@ -249,6 +249,12 @@ def show_all_recipes():
     return render_template('all-recipes.html', recipes=all_recipes)
 
 
+@app.route('/user-profile/recipes')
+def show_user_recipes():
+    """Render template with all user recipes and scores in database."""
+
+    user_recipes = get_user_recipes(session['user'])
+    return render_template('user-recipes.html', recipes=user_recipes)
 
 
 ######################## AJAX TESTING ROUTES ###################################
