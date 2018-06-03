@@ -209,3 +209,11 @@ def get_user_scores(user_id):
     """Return a list of all recipes for user."""
 
     return Score.query.filter_by(user_id=user_id).all()
+
+
+def clear_recipes(user_id):
+    active_recipes = get_active_user_recipes(user_id)
+    for recipe in active_recipes:
+        user_recipe = UserRecipe.query.filter_by(recipe_id=recipe.recipe_id).first()
+        user_recipe.active = False
+    db.session.commit()

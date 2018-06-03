@@ -257,6 +257,18 @@ def show_user_recipes():
     return render_template('user-recipes.html', recipes=user_recipes)
 
 
+############################# CLEAR MEALS ######################################
+
+
+@app.route('/clear-meals', methods=['POST'])
+# CURRENTLY CLEARING ALL BUT ONE??
+def clear_meals():
+    """Mark all active meals as inactive."""
+    clear_recipes(session['user'])
+    # FIGURE OUT WAY TO DO THIS WITH AN AJAX CALL
+    return redirect('/user-profile')
+
+
 ######################## AJAX TESTING ROUTES ###################################
 @app.route('/test', methods=['POST'])
 def test_rating_alert_with_ajax():
