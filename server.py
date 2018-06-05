@@ -5,6 +5,7 @@ import requests
 from random import choice, sample
 import pdb
 from jinja2 import StrictUndefined
+import bcrypt
 
 from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
@@ -66,11 +67,12 @@ def verify_credentials(): # -- TESTED
 
     if check_user:
         # if password matches:
-        if check_user.password == password:
+        is_password_match = bcrypt.checkpw(login_password.encode('utf-8'),
+                                           user.password.encode('utf-8'))
+        if is_password_match:
             # redirect to user profile and add user to session
             session['user'] = check_user.user_id
             flash('Welcome back!')
-            print "valid user and redirecting"
             return redirect('/user-profile') # -- TESTED
         # else redirect and flash invalid
         else:
@@ -127,7 +129,11 @@ def add_new_user(): # -- TESTED
         return redirect('/login')
     # else create user and add to database
     else:
-        new_user = create_new_user(name, email, password)
+
+        # Create hash of password before it is stored in database
+        hashed_pw = bcrypt.hashpw(password.encode('utf-8'),
+                              bcrypt.gensalt())
+        new_user = create_new_user(name, email, hashed_pw)
         # add user to session
         session['user'] = new_user.user_id
         # redirect to initial profile setup
