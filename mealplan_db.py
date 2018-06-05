@@ -219,6 +219,8 @@ def get_user_scores(user_id):
 
 
 def clear_recipes(user_id):
+    """Mark all active recipes for user to inactive."""
+
     active_recipes = get_active_user_recipes(user_id)
     for recipe in active_recipes:
         print "Recipe:", recipe
@@ -228,4 +230,13 @@ def clear_recipes(user_id):
         print "User recipe:", user_recipe
         user_recipe.active = False
         print "Updated status:", recipe.active
+    db.session.commit()
+
+
+def delete_user_recipe(user_id, recipe_id):
+    """Delete user_recipe for specified user and recipe."""
+
+    user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe.recipe_id == True) &
+                                   (UserRecipe.user_id == user_id)).first()
+    db.session.delete(user_recipe)
     db.session.commit()

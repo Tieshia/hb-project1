@@ -26,14 +26,14 @@
 <hr>
 <h2>Current Meal Plan</h2>
     {% for recipe in recipes %}
-    <form action='/made-meal' method='POST'>
+    <form action='/delete-recipe' method='POST'>
         <div>
             <h3>{{ recipe.recipe.recipe_name }}</h3><br>
             <a href="{{ recipe.recipe.url }}">
                 <img id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}"><br>
             </a>
             <button type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">
-                I made this!
+                Delete meal
             </button>
             <div class="stars">
               <input type="radio" id="{{ recipe.recipe.recipe_id }}-5" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="5" /><label for="{{ recipe.recipe.recipe_id }}-5"></label>
