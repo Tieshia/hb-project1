@@ -62,11 +62,12 @@ def verify_credentials_and_redirect_to_user_profile(): # -- TESTED
     password = request.form.get('password')
     # if email exists:
 
-    check_user = get_user(email) 
+    check_user = get_user(email) # -- mealplan_db.py
     print "retrieved user"
 
     if check_user:
         # if password matches:
+        # *** Get familiar with bcrypt checkpw and encode methods
         is_password_match = bcrypt.checkpw(password.encode('utf-8'),
                                            check_user.password.encode('utf-8'))
         if is_password_match:
@@ -122,18 +123,18 @@ def add_new_user_and_redirect_to_user_profile(): # -- TESTED
     password = request.form.get('password')
     # If email already in system:
 
-    check_user = get_user(email)
+    check_user = get_user(email) # -- mealplan_db.py
     if check_user:
         # Flash invalid email and redirect to login
         flash('Invalid credentials') # -- TESTED
         return redirect('/login')
     # else create user and add to database
     else:
-
+        # ** Get familiar with bcrypt hashpw and gensalt methods
         # Create hash of password before it is stored in database
         hashed_pw = bcrypt.hashpw(password.encode('utf-8'),
                               bcrypt.gensalt())
-        new_user = create_new_user(name, email, hashed_pw)
+        new_user = create_new_user(name, email, hashed_pw) # -- mealplan_db.py
         # add user to session
         session['user'] = new_user.user_id
         # redirect to initial profile setup
@@ -149,14 +150,14 @@ def render_user_profile_template(): # -- TESTED
     # get user from session
     user_id = session['user']
     # pull up highest rated recipes and pass into template
-    highest_random_recipes = get_random_highest_rated_recipes()
+    highest_random_recipes = get_random_highest_rated_recipes() # mealplan_db.py
     # pull up active recipes on user_recipes and pass into template 
-    user_recipes = get_active_user_recipes(user_id)
+    user_recipes = get_active_user_recipes(user_id) # mealplan_db.py
     # render profile template
     # if not user_recipes:
     #     user_recipes = None
     return render_template('profile.html', highest=highest_random_recipes,
-        recipes=user_recipes) # -- ** REQUIRES NEW TESTING **
+        recipes=user_recipes) # -- ** REQUIRES NEW TESTING; need to reseed db **
 
 
 ######################## GET MEAL PLAN ########################################
@@ -172,6 +173,7 @@ def show_recipes_from_EDAMAM_response(): # -- TESTED
 
     meal_plan_recipes_sample = get_random_sampling_of_diverse_recipes(ingredients, 
                                                                         types)
+    # -- mealplan_recipes.py
 
     return render_template('meal-plan.html', results=meal_plan_recipes_sample)
 
@@ -185,7 +187,7 @@ def add_recipe_to_plan():
         for recipe_id in selected_recipes:
             recipe_id = int(recipe_id)
             
-            create_user_recipe(recipe_id, session['user'])
+            create_user_recipe(recipe_id, session['user']) # -- mealplan_db.py
 
     flash('Successfully added!')
     return redirect('/user-profile')
@@ -205,10 +207,10 @@ def mark_user_meal_as_made_and_update_score(): # -- TESTED
     # Get score from request.form
     score = request.form.get('score')
 
-    upsert_score(int(recipe_id), session['user'], int(score))
+    upsert_score(int(recipe_id), session['user'], int(score)) # -- mealplan_db.py
 
     # Update user recipe to inactive and increment times_cooked by 1
-    mark_meal_made(int(recipe_id), session['user'])
+    mark_meal_made(int(recipe_id), session['user']) # -- mealplan_db.py
 
     # Return success dict and on js side have callback to execute DOM changes 
     return "Success"
@@ -219,7 +221,7 @@ def mark_user_meal_as_made_and_update_score(): # -- TESTED
 def show_all_recipes():
     """Render template with all recipes in database."""
 
-    all_recipes = get_all_recipes()
+    all_recipes = get_all_recipes() # -- mealplan_db.py
     return render_template('all-recipes.html', recipes=all_recipes)
 
 
@@ -227,7 +229,7 @@ def show_all_recipes():
 def show_user_recipes():
     """Render template with all user recipes and scores in database."""
 
-    user_recipes = get_user_scores(session['user'])
+    user_recipes = get_user_scores(session['user']) # -- mealplan_db.py
     return render_template('user-recipes.html', recipes=user_recipes)
 
 
@@ -237,18 +239,18 @@ def show_user_recipes():
 @app.route('/clear-meals', methods=['POST'])
 def clear_meals():
     """Mark all active meals as inactive."""
-    clear_recipes(session['user'])
-    # FIGURE OUT WAY TO DO THIS WITH AN AJAX CALL
+    clear_recipes(session['user']) # -- mealplan_db.py
+    # ** FIGURE OUT WAY TO DO THIS WITH AN AJAX CALL
     return redirect('/user-profile')
 
 
 @app.route('/delete-recipe', methods=['POST'])
-def delete_user_recipe():
+def delete_selected_recipe():
     """Delete user_recipe specified by user."""
 
     # **YOUR ARE HERE**; SAYING TAKES 0 ARGUMENTS FOR SOME REASON
     recipe_id = request.form.get('recipe_id')
-    delete_user_recipe(session['user'], int(recipe_id))
+    delete_user_recipe(session['user'], int(recipe_id)) # -- mealplan_db.py
     flash('Successfully deleted!')
     return redirect('/user-profile')
 

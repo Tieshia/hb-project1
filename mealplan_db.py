@@ -68,7 +68,7 @@ def create_ingredient(ingredient_name, type_id):  # -- TESTED
     db.session.commit()
 
 
-def standardize_ingredient_name(ingredient_name):
+def standardize_ingredient_name(ingredient_name): # -- ** Technically not a db fn?
     """Use nltk.stem to standardize user input."""
 
     tokenized_ingredients = ingredient_name.split()
@@ -236,7 +236,7 @@ def clear_recipes(user_id):
 def delete_user_recipe(user_id, recipe_id):
     """Delete user_recipe for specified user and recipe."""
 
-    user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe.recipe_id == True) &
+    user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
                                    (UserRecipe.user_id == user_id)).first()
     db.session.delete(user_recipe)
     db.session.commit()
