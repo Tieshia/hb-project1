@@ -214,6 +214,11 @@ def get_user_scores(user_id):
 def clear_recipes(user_id):
     active_recipes = get_active_user_recipes(user_id)
     for recipe in active_recipes:
-        user_recipe = UserRecipe.query.filter_by(recipe_id=recipe.recipe_id).first()
+        print "Recipe:", recipe
+        print "Status:", recipe.active
+        user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe.recipe_id == True) &
+                                   (UserRecipe.user_id == user_id)).first()
+        print "User recipe:", user_recipe
         user_recipe.active = False
+        print "Updated status:", recipe.active
     db.session.commit()

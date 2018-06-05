@@ -2,7 +2,7 @@
 
 import os
 import requests
-from random import choice
+from random import choice, sample
 import pdb
 from jinja2 import StrictUndefined
 
@@ -10,7 +10,7 @@ from flask import Flask, render_template, request, flash, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
 
 from mealplan_db import *
-from mealplan_recipes import pass_ingredients_to_recipes, save_recipes_from_response
+from mealplan_recipes import *
 from model import connect_to_db
 
 
@@ -174,32 +174,58 @@ def show_meals(): # -- TESTED
     ingredients = request.form.getlist('ingredients')
     types = request.form.getlist('types')
 
-    ingredient_rows = []
-
+    # Create dictionary mapping each ingredient to their food type
+    ingredients_to_food_types_dict = create_type_to_ingredient_dict(ingredients, 
+                                                                        types)
     # create ingredient
-    for i in range(len(ingredients)):
-        new_ingredient = add_ingredient(ingredients[i], types[i])
-        ingredient_rows.append(new_ingredient)
-    # format ingredients to pass into EDAMAM API
-    ingredients = ','.join(ingredients)
+    pass_ingredients_to_db(ingredients_to_food_types_dict)
+    # Get list of all possible ingredient combinations based on protein
+    ingredient_combos_by_protein = combine_ingredients(ingredients_to_food_types_dict)
+    print "ingredient_combos_by_protein:", ingredient_combos_by_protein
+    # Pass combinations into EDAMAM API
+    diverse_EDAMAM_recipes = get_diverse_recipes(ingredient_combos_by_protein)
+    # Save each recipe into database
+    recipes = []
+    for recipes_list in diverse_EDAMAM_recipes:
+        recipes.append(save_recipes_from_response(recipes_list))
+    print "Recipes:", recipes
+    # Save result into UserIngredients association table
+    # for index in results,
+    for i in range(len(recipes)):
+        # iterate through list of recipes results at index
+        # map to RecipeIngredients based off same index
+        save_recipes_and_ingredients_from_response(recipes[i], 
+                                                ingredient_combos_by_protein[i])
 
-    # ** pass ingredients to create_type_to_ingredient_dict **
-    
-    results = pass_ingredients_to_recipes(ingredients)
+    # Randomly select through recipes until 12 recipes selected (unless total 
+    # number of responses is less than 12)
+    meal_plan_recipes_all = set()
+    for lst in recipes:
+        for recipe in lst:
+            print "Recipe:", recipe
+            meal_plan_recipes_all.add(recipe)
+    meal_plan_recipes_all = tuple(meal_plan_recipes_all)
 
-    recipes = save_recipes_from_response(results)
+    meal_plan_recipes_sample = set()
+    if len(meal_plan_recipes_all) > 12:
+        while len(meal_plan_recipes_sample) < 13:
+            meal_plan_recipes_sample.add(choice(meal_plan_recipes_all) )
+    else:
+        meal_plan_recipes_sample = meal_plan_recipes_all
 
-    # if recipe_id not in Recipe_ingredients:
-    for recipe in recipes:
-        recipe_ingredient = get_recipe_ingredient(recipe.recipe_id)
-        if recipe_ingredient is None:
-            # Add to recipe_ingredients and commit
-            for ingredient in ingredient_rows:
-                create_recipe_ingredient(recipe.recipe_id, ingredient.ingredient_id)
-        else:
-            pass
+    # OLD CODE recipes = save_recipes_from_response(results)
 
-    return render_template('meal-plan.html', results=recipes)
+    # # if recipe_id not in Recipe_ingredients:
+    # for recipe in recipes:
+    #     recipe_ingredient = get_recipe_ingredient(recipe.recipe_id)
+    #     if recipe_ingredient is None:
+    #         # Add to recipe_ingredients and commit
+    #         for ingredient in ingredient_rows:
+    #             create_recipe_ingredient(recipe.recipe_id, ingredient.ingredient_id)
+    #     else:
+    #         pass
+
+    return render_template('meal-plan.html', results=meal_plan_recipes_sample)
 
 
 @app.route('/check-meal', methods=['POST']) # -- TESTED
