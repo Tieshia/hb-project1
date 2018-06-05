@@ -60,7 +60,7 @@ def save_recipes_from_response(results):
 
     for recipe in results:
         # If recipe url currently not in Recipes
-        add_json_response_to_recipes(recipe['recipe']['label'], 
+        create_recipe(recipe['recipe']['label'], 
             recipe['recipe']['url'], recipe['recipe']['image'])
         recipes.add(get_recipe_by_url(recipe['recipe']['url']))
 
@@ -109,3 +109,48 @@ def pass_ingredients_to_db(ingredients_dict):
         for ingredient in ingredients_dict[key]:
             food_type = get_ingredient_type(key)
             create_ingredient(ingredient, food_type.type_id)
+
+
+def get_random_sampling_of_diverse_recipes(ingredients, types):
+    """Combine mealplan_recipes fns to get random sampling of diverse recipes.
+    """
+
+        # Create dictionary mapping each ingredient to their food type
+    ingredients_to_food_types_dict = create_type_to_ingredient_dict(ingredients, 
+                                                                        types)
+    # create ingredient
+    pass_ingredients_to_db(ingredients_to_food_types_dict)
+    # Get list of all possible ingredient combinations based on protein
+    ingredient_combos_by_protein = combine_ingredients(ingredients_to_food_types_dict)
+    print "ingredient_combos_by_protein:", ingredient_combos_by_protein
+    # Pass combinations into EDAMAM API
+    diverse_EDAMAM_recipes = get_diverse_recipes(ingredient_combos_by_protein)
+    # Save each recipe into database
+    recipes = []
+    for recipes_list in diverse_EDAMAM_recipes:
+        recipes.append(save_recipes_from_response(recipes_list))
+    print "Recipes:", recipes
+    # Save result into UserIngredients association table
+    # for index in results,
+    for i in range(len(recipes)):
+        # iterate through list of recipes results at index
+        # map to RecipeIngredients based off same index
+        save_recipes_and_ingredients_from_response(recipes[i], 
+                                                ingredient_combos_by_protein[i])
+
+    # Randomly select through recipes until 12 recipes selected (unless total 
+    # number of responses is less than 12)
+    meal_plan_recipes_all = set()
+    for lst in recipes:
+        for recipe in lst:
+            print "Recipe:", recipe
+            meal_plan_recipes_all.add(recipe)
+    meal_plan_recipes_all = tuple(meal_plan_recipes_all)
+
+    meal_plan_recipes_sample = set()
+    if len(meal_plan_recipes_all) > 12:
+        while len(meal_plan_recipes_sample) < 13:
+            meal_plan_recipes_sample.add(choice(meal_plan_recipes_all) )
+    else:
+        meal_plan_recipes_sample = meal_plan_recipes_all
+    return meal_plan_recipes_sample

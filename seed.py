@@ -27,7 +27,8 @@ def load_food_type():
         'Produce', 'Nuts and Seeds', 'Grains and Pasta']
 
     for item in food_groups:
-        food_group = FoodType(food_type=item)
+        if get_ingredient_type(item) is None:
+            food_group = FoodType(food_type=item)
 
         # Add group to the session or it won't ever be stored.
         db.session.add(food_group)

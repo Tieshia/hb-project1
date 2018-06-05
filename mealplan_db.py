@@ -92,24 +92,14 @@ def get_recipe_by_url(url):  # -- TESTED
 
 def create_recipe(recipe_name, url, image_url):  # -- TESTED
     """Create new recipe in db."""
-
-    response_recipe = Recipe(recipe_name=recipe_name,
+    recipe = get_recipe_by_url(url)
+    if recipe is None:
+        response_recipe = Recipe(recipe_name=recipe_name,
                              url=url,
                              image_url=image_url)
-    db.session.add(response_recipe)
+        db.session.add(response_recipe)
 
     db.session.commit()
-
-
-def add_json_response_to_recipes(recipe_name, url, image_url):  # -- TESTED
-    """Create new recipe based on json response."""
-
-    recipe_result = get_recipe_by_url(url)
-    if recipe_result is None:
-        # Create new recipe and add to Recipes
-        create_recipe(recipe_name, url, image_url)
-    else:
-        pass
 
 
 def get_recipe_ingredient(recipe_id):  # -- TESTED
