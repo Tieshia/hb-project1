@@ -27,7 +27,7 @@
 <h2>Current Meal Plan</h2>
     {% for recipe in recipes %}
     <form action='/delete-recipe' method='POST'>
-        <div>
+        <div class="recipes">
             <h3>{{ recipe.recipe.recipe_name }}</h3><br>
             <a href="{{ recipe.recipe.url }}">
                 <img id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}"><br>
@@ -112,8 +112,6 @@
   // $('body').append(log);
     $('[type*="radio"]').change(function () {
       var me = $(this);
-      console.log($("input:checked").val() + " is checked!");
-      // log.html(me.attr('value'));
     });
 
 // Code for selecting score and changing DOM
