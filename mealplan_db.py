@@ -4,6 +4,10 @@ from datetime import datetime
 from model import (connect_to_db, db, User, FoodType, Recipe, Ingredient,
                    RecipeIngredient, UserRecipe, Score)
 from random import choice
+from nltk.stem import PorterStemmer
+
+# Create class for stemming words
+ps = PorterStemmer() 
 
 
 def get_user(email):  # -- TESTED
@@ -62,6 +66,19 @@ def create_ingredient(ingredient_name, type_id):  # -- TESTED
         ingredient_name=ingredient_name, type_id=type_id)
     db.session.add(new_ingredient)
     db.session.commit()
+
+
+def standardize_ingredient_name(ingredient_name):
+    """Use nltk.stem to standardize user input."""
+
+    tokenized_ingredients = ingredient_name.split()
+    if len(tokenized_ingredients) > 1:
+        for i in range(len(tokenized_ingredients)):
+           tokenized_ingredients[i] = ps.stem(tokenized_ingredients[i])
+        ingredient_name = ' '.join(tokenized_ingredients)
+    else:
+        ingredient_name = ps.stem(ingredient_name)
+    return ingredient_name
 
 
 def add_ingredient(ingredient_name, ingredient_type):  # -- TESTED

@@ -155,15 +155,6 @@ def show_user_profile(): # -- TESTED
 
 ######################## GET MEAL PLAN ########################################
 
-def get_recipes(payload): # -- TESTED
-    """Get meal results from spoonacular."""
-
-    # pass into EDAMAM api
-    r = requests.get("https://api.edamam.com/search", 
-        params=payload)
-    data = r.json()    
-    return data['hits']
-
 
 @app.route('/plan-meal', methods=['POST'])
 def show_meals(): # -- TESTED

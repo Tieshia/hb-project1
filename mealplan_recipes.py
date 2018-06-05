@@ -105,17 +105,18 @@ def get_diverse_recipes(ingredients_combos):
 def pass_ingredients_to_db(ingredients_dict):
     """Pass ingredients into db."""
 
-    for key in ingredients_dict:
-        for ingredient in ingredients_dict[key]:
-            food_type = get_ingredient_type(key)
-            create_ingredient(ingredient, food_type.type_id)
+    for food_type in ingredients_dict:
+        for ingredient in ingredients_dict[food_type]:
+            add_ingredient(ingredient, food_type)
 
 
 def get_random_sampling_of_diverse_recipes(ingredients, types):
     """Combine mealplan_recipes fns to get random sampling of diverse recipes.
     """
 
-        # Create dictionary mapping each ingredient to their food type
+    for i in range(len(ingredients)):
+        ingredients[i] = standardize_ingredient_name(ingredients[i])
+    # Create dictionary mapping each ingredient to their food type
     ingredients_to_food_types_dict = create_type_to_ingredient_dict(ingredients, 
                                                                         types)
     # create ingredient
