@@ -8,30 +8,30 @@ from faker import Faker
 import bcrypt
 from nltk.stem import PorterStemmer
 
-from  mealplan_recipes import (combine_ingredients, get_diverse_recipes, 
-    save_recipes_from_response)
-from model import (User, FoodType, Recipe, Ingredient, 
-    RecipeIngredient, UserRecipe, Score, connect_to_db, db, init_app)
+from mealplan_recipes import (combine_ingredients, get_diverse_recipes,
+                              save_recipes_from_response)
+from model import (User, FoodType, Recipe, Ingredient,
+                   RecipeIngredient, UserRecipe, Score, connect_to_db, db, init_app)
 from mealplan_db import (get_ingredient_type, create_new_user, get_ingredient_type,
-        create_ingredient, create_user_recipe, upsert_score)
+                         create_ingredient, create_user_recipe, upsert_score)
 
 
 # Create alias for Faker()
 fake = Faker()
 
 # Create class for stemming words
-ps = PorterStemmer() 
+ps = PorterStemmer()
 
 INGREDIENTS = {'Proteins': ['chicken', 'steak', 'tofu', 'eggs'],
-                'Produce': ['broccoli', 'carrots', 'mushrooms'],
-                'Grains and Pasta': ['rice']}
+               'Produce': ['broccoli', 'carrots', 'mushrooms'],
+               'Grains and Pasta': ['rice']}
 
 
 def load_food_type():
     """Load food type by list below."""
 
-    food_groups = ['Dairy', 'Proteins', 'Soups, Sauces, and Gravies', 
-        'Produce', 'Nuts and Seeds', 'Grains and Pasta']
+    food_groups = ['Dairy', 'Proteins', 'Soups, Sauces, and Gravies',
+                   'Produce', 'Nuts and Seeds', 'Grains and Pasta']
 
     for item in food_groups:
         if get_ingredient_type(item) is None:
@@ -53,7 +53,7 @@ def load_fake_users():
         password = 'test'
 
         hashed_pw = bcrypt.hashpw(password.encode('utf-8'),
-                              bcrypt.gensalt())
+                                  bcrypt.gensalt())
 
         create_new_user(name, email, hashed_pw)
 
@@ -76,7 +76,7 @@ def load_recipes(INGREDIENTS):
     # Pass nested list of results into recipes db
 
     recipes = []
-    
+
     for result in results:
         recipes.append(save_recipes_from_response(result))
     return recipes
@@ -98,11 +98,11 @@ def load_fake_scores():
     """Add scores for each user to db."""
 
     users = User.query.all()
-    
+
     for user in users:
         recipes = UserRecipe.query.filter_by(user_id=user.user_id).all()
         for recipe in recipes:
-            score = randint(1,5)
+            score = randint(1, 5)
             upsert_score(recipe.recipe_id, user.user_id, score)
 
 
@@ -124,4 +124,3 @@ if __name__ == "__main__":
     load_recipes(INGREDIENTS)
     load_fake_user_recipes()
     load_fake_scores()
-

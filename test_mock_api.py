@@ -2,9 +2,10 @@ from unittest import TestCase
 import os
 import json
 from model import (User, FoodType, Recipe, Ingredient, RecipeIngredient,
-    UserRecipe, Score, connect_to_db, db, example_data)
+                   UserRecipe, Score, connect_to_db, db, example_data)
 from server import app
 import server
+
 
 class MockFlaskTests(TestCase):
     """Flask tests that mock Spoonacular API response."""
@@ -44,12 +45,12 @@ class MockFlaskTests(TestCase):
         """Get results from Spoonacular API and show meal results."""
 
         result = self.client.post('/plan-meal', data={'app_id': os.environ['EDAMAM_SECRET_ID'],
-                                                    'app_key': os.environ['EDAMAM_SECRET_KEY'],
-                                                    'ingredients': 'chicken,broccoli'})
+                                                      'app_key': os.environ['EDAMAM_SECRET_KEY'],
+                                                      'ingredients': 'chicken,broccoli'})
 
         self.assertIn('Chicken Broccoli Divan', result.data)
-        self.assertIn('http://www.thekitchn.com/recipe-chicken-broccoli-alfredo-229203', 
-            result.data)
+        self.assertIn('http://www.thekitchn.com/recipe-chicken-broccoli-alfredo-229203',
+                      result.data)
         self.assertIn('<img', result.data)
         self.assertIn('<h3>', result.data)
         self.assertNotIn('Apple Fritter', result.data)

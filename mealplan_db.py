@@ -7,7 +7,7 @@ from random import choice
 from nltk.stem import PorterStemmer
 
 # Create class for stemming words
-ps = PorterStemmer() 
+ps = PorterStemmer()
 
 
 def get_user(email):  # -- TESTED
@@ -68,13 +68,14 @@ def create_ingredient(ingredient_name, type_id):  # -- TESTED
     db.session.commit()
 
 
-def standardize_ingredient_name(ingredient_name): # -- ** Technically not a db fn?
+# -- ** Technically not a db fn?
+def standardize_ingredient_name(ingredient_name):
     """Use nltk.stem to standardize user input."""
 
     tokenized_ingredients = ingredient_name.split()
     if len(tokenized_ingredients) > 1:
         for i in range(len(tokenized_ingredients)):
-           tokenized_ingredients[i] = ps.stem(tokenized_ingredients[i])
+            tokenized_ingredients[i] = ps.stem(tokenized_ingredients[i])
         ingredient_name = ' '.join(tokenized_ingredients)
     else:
         ingredient_name = ps.stem(ingredient_name)
@@ -112,8 +113,8 @@ def create_recipe(recipe_name, url, image_url):  # -- TESTED
     recipe = get_recipe_by_url(url)
     if recipe is None:
         response_recipe = Recipe(recipe_name=recipe_name,
-                             url=url,
-                             image_url=image_url)
+                                 url=url,
+                                 image_url=image_url)
         db.session.add(response_recipe)
 
     db.session.commit()
@@ -183,10 +184,11 @@ def get_weighted_highest_average_rated_recipes():
             average_ratings[recipe]['ratings_sum'] += score.score
             average_ratings[recipe]['count'] += 1
         else:
-            average_ratings[recipe] = {'ratings_sum': score.score, 
-                                        'count': 1}
+            average_ratings[recipe] = {'ratings_sum': score.score,
+                                       'count': 1}
     for key in average_ratings:
-        average_ratings[key]['average'] = ((average_ratings[key]['ratings_sum']/average_ratings[key]['count']) + 1) 
+        average_ratings[key]['average'] = (
+            (average_ratings[key]['ratings_sum']/average_ratings[key]['count']) + 1)
         recipes.append((average_ratings[key]['average'], key))
     highest_rated = sorted(recipes)[:10]
     weighted_highest_ratings = []
@@ -226,7 +228,7 @@ def clear_recipes(user_id):
         print "Recipe:", recipe
         print "Status:", recipe.active
         user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe.recipe_id == True) &
-                                   (UserRecipe.user_id == user_id)).first()
+                                              (UserRecipe.user_id == user_id)).first()
         print "User recipe:", user_recipe
         user_recipe.active = False
         print "Updated status:", recipe.active
@@ -237,6 +239,6 @@ def delete_user_recipe(user_id, recipe_id):
     """Delete user_recipe for specified user and recipe."""
 
     user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
-                                   (UserRecipe.user_id == user_id)).first()
+                                          (UserRecipe.user_id == user_id)).first()
     db.session.delete(user_recipe)
     db.session.commit()
