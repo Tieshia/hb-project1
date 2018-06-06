@@ -2,6 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import bcrypt
 
 # This is the connection to the PostgreSQL database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -149,12 +150,15 @@ def example_data():
     Recipe.query.delete()
     FoodType.query.delete()
     User.query.delete()
+    password = 'test'
+    hashed_pw = bcrypt.hashpw(password.encode('utf-8'),
+                                  bcrypt.gensalt())
 
     # Add sample data
     # Users
     tieshia = User(name="Tieshia", email="francistie@gmail.com",
-                   password="test")
-    jane = User(name="Jane", email="jhacks@gmail.com", password="test")
+                   password=hashed_pw)
+    jane = User(name="Jane", email="jhacks@gmail.com", password=hashed_pw)
 
     # Food Type
     protein = FoodType(food_type='Proteins')
