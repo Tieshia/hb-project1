@@ -233,7 +233,7 @@ def show_user_recipes():
     return render_template('user-recipes.html', recipes=user_recipes)
 
 
-############################# CLEAR MEAL(S) ######################################
+############################# CLEAR MEAL(S) ####################################
 
 
 @app.route('/clear-meals', methods=['POST'])
@@ -251,8 +251,9 @@ def delete_selected_recipe():
     # **YOUR ARE HERE**; SAYING TAKES 0 ARGUMENTS FOR SOME REASON
     recipe_id = request.form.get('recipe_id')
     delete_user_recipe(session['user'], int(recipe_id)) # -- mealplan_db.py
-    flash('Successfully deleted!')
-    return redirect('/user-profile')
+    # flash('Successfully deleted!')
+    # return redirect('/user-profile')
+    return ("Successfully deleted recipe!")
 
 
 ######################## AJAX TESTING ROUTES ###################################
