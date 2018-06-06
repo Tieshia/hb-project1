@@ -78,9 +78,6 @@ def save_recipes_and_ingredients_from_response(recipes, ingredients):
                 ingredient = get_ingredient(ingredient)
                 create_recipe_ingredient(recipe.recipe_id, 
                     ingredient.ingredient_id)
-        else:
-            pass
-
 
 
 def get_diverse_recipes(ingredients_combos):
@@ -123,14 +120,12 @@ def get_random_sampling_of_diverse_recipes(ingredients, types):
     pass_ingredients_to_db(ingredients_to_food_types_dict)
     # Get list of all possible ingredient combinations based on protein
     ingredient_combos_by_protein = combine_ingredients(ingredients_to_food_types_dict)
-    print "ingredient_combos_by_protein:", ingredient_combos_by_protein
     # Pass combinations into EDAMAM API
     diverse_EDAMAM_recipes = get_diverse_recipes(ingredient_combos_by_protein)
     # Save each recipe into database
     recipes = []
     for recipes_list in diverse_EDAMAM_recipes:
         recipes.append(save_recipes_from_response(recipes_list))
-    print "Recipes:", recipes
     # Save result into UserIngredients association table
     # for index in results,
     for i in range(len(recipes)):
@@ -144,7 +139,6 @@ def get_random_sampling_of_diverse_recipes(ingredients, types):
     meal_plan_recipes_all = set()
     for lst in recipes:
         for recipe in lst:
-            print "Recipe:", recipe
             meal_plan_recipes_all.add(recipe)
     meal_plan_recipes_all = tuple(meal_plan_recipes_all)
 
