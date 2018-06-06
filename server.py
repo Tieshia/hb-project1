@@ -64,7 +64,6 @@ def verify_credentials_and_redirect_to_user_profile():  # -- TESTED
     # if email exists:
 
     check_user = get_user(email)  # -- mealplan_db.py
-    print "retrieved user"
 
     if check_user:
         # if password matches:
@@ -79,12 +78,10 @@ def verify_credentials_and_redirect_to_user_profile():  # -- TESTED
         # else redirect and flash invalid
         else:
             flash('Invalid credentials.')
-            print "invalid creds, pw wrong"
             return redirect('/login')  # -- TESTED
     # else redirect and flash invalid
     else:
         flash('Invalid credentials')
-        print "invalid user"
         return redirect('/login')  # -- TESTED
 
 
@@ -158,7 +155,7 @@ def render_user_profile_template():  # -- TESTED
     # if not user_recipes:
     #     user_recipes = None
     return render_template('profile.html', highest=highest_random_recipes,
-                           recipes=user_recipes)  # -- ** REQUIRES NEW TESTING; need to reseed db **
+                           recipes=user_recipes)
 
 
 ######################## GET MEAL PLAN ########################################

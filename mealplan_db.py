@@ -12,7 +12,6 @@ ps = PorterStemmer()
 
 def get_user(email):  # -- TESTED
     """Provides user based off login email."""
-    print "inside get_user " + email
     return User.query.filter_by(email=email).first()
 
 

@@ -67,17 +67,14 @@ class FlaskRouteTestswDatabase(TestCase):
 
         # Connect to test database
         connect_to_db(app, "postgresql:///testdb")
-        print "successfully connected to db"
 
         # Create tables and add sample data
         db.create_all()
         example_data()
-        print "loaded data"
 
         # Make mock
         def _mock_get_random_highest_rated_recipes():
             """Makes mock API return result."""
-            print 'mock '*10
             recipe = get_recipe_by_url('test1.com')
             score = 4
             return [(score, recipe)]
@@ -92,12 +89,11 @@ class FlaskRouteTestswDatabase(TestCase):
 
     def test_check_login(self):
         """Test login page w/ correct credentials."""
-        print "beginning test_check_login"
+
         result = self.client.post("/login",
                                   data={'email': "jhacks@gmail.com",
                                         'password': 'test'},
                                   follow_redirects=True)
-        print "successful request"
         self.assertIn('User Profile', result.data)
         self.assertIn('Welcome back', result.data)
         self.assertNotIn('Invalid credentials', result.data)
@@ -113,31 +109,31 @@ class FlaskRouteTestswDatabase(TestCase):
         self.assertIn('Log In', result.data)
         self.assertNotIn('User Profile', result.data)
 
-    # def test_check_login_wrong_email(self):
-    #     """Test login page w/ incorrect email."""
+    def test_check_login_wrong_email(self):
+        """Test login page w/ incorrect email."""
 
-    #     result = self.client.post('/login',
-    #                               data={'email': 'test@gmail.com',
-    #                                     'password': 'test'},
-    #                               follow_redirects=True)
-    #     self.assertIn('Invalid credentials', result.data)
-    #     self.assertIn('Log In', result.data)
-    #     self.assertNotIn('User Profile', result.data)
+        result = self.client.post('/login',
+                                  data={'email': 'test@gmail.com',
+                                        'password': 'test'},
+                                  follow_redirects=True)
+        self.assertIn('Invalid credentials', result.data)
+        self.assertIn('Log In', result.data)
+        self.assertNotIn('User Profile', result.data)
 
-    # def test_registration_new_user(self):
-    #     """Test adding new user from register page."""
+    def test_registration_new_user(self):
+        """Test adding new user from register page."""
 
-    #     result = self.client.post('/register',
-    #                               data={'name': 'Sarah',
-    #                                     'email': 'sdevelops@gmail.com',
-    #                                     'password': 'test'},
-    #                               follow_redirects=True)
+        result = self.client.post('/register',
+                                  data={'name': 'Sarah',
+                                        'email': 'sdevelops@gmail.com',
+                                        'password': 'test'},
+                                  follow_redirects=True)
 
-    #     self.assertIn('User Profile', result.data)
-    #     self.assertNotIn('Invalid credentials', result.data)
-    #     self.assertNotIn('Register', result.data)
-    #     self.assertIn('No recipes to display', result.data)
-    #     self.assertNotIn('I made this!', result.data)
+        self.assertIn('User Profile', result.data)
+        self.assertNotIn('Invalid credentials', result.data)
+        self.assertNotIn('Register', result.data)
+        self.assertIn('No recipes to display', result.data)
+        self.assertNotIn('I made this!', result.data)
 
     # def test_registration_old_user(self):
     #     """Test adding old user from register page."""
