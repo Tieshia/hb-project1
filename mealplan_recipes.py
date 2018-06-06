@@ -4,7 +4,8 @@ from model import connect_to_db, db, FoodType, Recipe, Ingredient
 import requests
 import json
 import os
-from mealplan_db import *
+from mealplan_db import (create_recipe, get_recipe_ingredient, get_ingredient, 
+    create_recipe_ingredient, add_ingredient, standardize_ingredient_name)
 
 
 def create_type_to_ingredient_dict(ingredients, food_types):

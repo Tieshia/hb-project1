@@ -5,15 +5,22 @@ import os
 from random import choice, randint
 from sqlalchemy import func
 from faker import Faker
+import bcrypt
+from nltk.stem import PorterStemmer
 
-from  mealplan_recipes import *
+from  mealplan_recipes import (combine_ingredients, get_diverse_recipes, 
+    save_recipes_from_response)
 from model import (User, FoodType, Recipe, Ingredient, 
     RecipeIngredient, UserRecipe, Score, connect_to_db, db, init_app)
-from mealplan_db import *
+from mealplan_db import (get_ingredient_type, create_new_user, get_ingredient_type,
+        create_ingredient, create_user_recipe, upsert_score)
 
 
 # Create alias for Faker()
 fake = Faker()
+
+# Create class for stemming words
+ps = PorterStemmer() 
 
 INGREDIENTS = {'Proteins': ['chicken', 'steak', 'tofu', 'eggs'],
                 'Produce': ['broccoli', 'carrots', 'mushrooms'],
@@ -40,11 +47,15 @@ def load_food_type():
 def load_fake_users():
     """Create list of 5 users."""
 
-    for i in range(5):
+    for i in range(15):
         name = fake.first_name()
         email = fake.email()
         password = 'test'
-        create_new_user(name, email, password)
+
+        hashed_pw = bcrypt.hashpw(password.encode('utf-8'),
+                              bcrypt.gensalt())
+
+        create_new_user(name, email, hashed_pw)
 
 
 def load_fake_ingredients():
@@ -53,7 +64,7 @@ def load_fake_ingredients():
     for key in INGREDIENTS:
         for ingredient in INGREDIENTS[key]:
             food_type = get_ingredient_type(key)
-            create_ingredient(ingredient, food_type.type_id)
+            create_ingredient(ps.stem(ingredient), food_type.type_id)
 
 
 def load_recipes(INGREDIENTS):
@@ -69,11 +80,6 @@ def load_recipes(INGREDIENTS):
     for result in results:
         recipes.append(save_recipes_from_response(result))
     return recipes
-
-
-def load_recipe_ingredients():
-    """Add recipe ingredients to db."""
-    pass
 
 
 def load_fake_user_recipes():
@@ -111,10 +117,11 @@ def init_app():
 
 if __name__ == "__main__":
     init_app()
-    # db.create_all()
-    # load_food_type()
-    # load_fake_users()
-    # load_fake_ingredients()
-    # load_recipes()
+    db.create_all()
+    load_food_type()
+    load_fake_users()
+    load_fake_ingredients()
+    load_recipes(INGREDIENTS)
+    load_fake_user_recipes()
     load_fake_scores()
 
