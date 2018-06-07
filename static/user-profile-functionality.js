@@ -40,14 +40,13 @@
     $('div.recipes button').on('click', function (evt) {
         evt.preventDefault();
         value = $(this).val();
-        console.log("Recipe id:", value);
         $(`div*[data-id='${value}']`).fadeOut("slow");
+        $(`div*[data-id='${value}']`).remove();
         let formInputs = {
             recipe_id: String(value)
         }
 
         $.post('delete-recipe', formInputs, function (result) {
-            alert(result);
             }
         );
     });
