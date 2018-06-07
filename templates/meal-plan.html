@@ -4,15 +4,18 @@
 {% block content %}
 <h1>Meals</h1>
 <form action='/check-meal' method='POST'>
+<div id="recipes-list" class="row"> 
 {% for recipe in results %}
-    <div>
+    <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
         <h3>{{ recipe.recipe_name }}</h3><br>
         <a href="{{ recipe.url }}">
             <img src="{{ recipe.image_url }}"><br>
         </a>
-        <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"><br>
+        <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}">
+        <br>
     </div>
     {% endfor %}
     <input type="submit">
+</div>
 </form>
 {% endblock %}
