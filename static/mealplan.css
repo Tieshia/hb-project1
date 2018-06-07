@@ -108,7 +108,7 @@
   /* the hidden clearer */
 }
 .stars * {
-  font-size: 1rem;
+  font-size: 2rem;
 }
 .stars > input {
   display: none;
@@ -151,4 +151,16 @@
 /* STAR SCORES */
 .checked {
   color: yellow;
+}
+
+/* RECOMMENDED RECIPES*/
+.recommended {
+  filter: brightness(50%);
+  opacity: 0.75;
+  border-radius: 50%;
+}
+
+.userrecipe {
+  border-radius: 15%;
+  opacity: 0.75;
 }

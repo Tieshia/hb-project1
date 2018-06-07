@@ -4,7 +4,10 @@
 <h1>User Profile</h1>
 <hr>
 <h2>Recommended Recipes for You:</h2>
-<div class="container carousel-container d-none d-sm-block">
+<div class="row">
+    <div class="col-4"></div>
+    <div class="col-4">
+        <div class="container carousel-container d-none d-sm-block w-100">
   <form action='/check-meal' method='POST'>
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
@@ -21,10 +24,10 @@
             {% if loop.first %}
             <div class="carousel-item active">
                 <a href="{{ recipe.url }}">
-                    <img class="d-block w-100" src="{{ recipe.image_url }}">
+                    <img class="recommended d-block w-100" src="{{ recipe.image_url }}">
                 </a>
                 <div class="carousel-caption d-none d-md-block">
-                    <h3>{{ recipe.recipe_name }}</h3><br>
+                    <h2 style="color: white; font-weight: bolder;">{{ recipe.recipe_name }}</h2><br>
                     {% for i in range(score) %}
                     <span class="fa fa-star checked"></span>
                     {% endfor %}
@@ -34,10 +37,10 @@
             {% else %}
             <div class="carousel-item">
                 <a href="{{ recipe.url }}">
-                    <img class="d-block w-100" src="{{ recipe.image_url }}">
+                    <img class="recommended d-block w-100" src="{{ recipe.image_url }}">
                 </a>
                 <div class="carousel-caption d-none d-md-block">
-                    <h3>{{ recipe.recipe_name }}</h3><br>
+                    <h2 style="color: white; font-weight: bolder;">{{ recipe.recipe_name }}</h2><br>
                     {% for i in range(score) %}
                     <span class="fa fa-star checked"></span>
                     {% endfor %}
@@ -58,21 +61,33 @@
   </div>
   <input type="submit" value="Add to meal plan!">
   </form>
+    </div>
+    </div>
+    <div class="col-4"></div>
 </div>
 <hr>
 {% if recipes %}
 <h2>Current Meal Plan</h2>
     <div id="recipes-list" class="row">
       {% for recipe in recipes %}
-        <div class="card border-primary mb-3 recipes" data-id="{{ recipe.recipe.recipe_id }}" style="max-width: 20rem;">
+      <div class="col-4 recipes d-flex align-items-stretch" data-id="{{ recipe.recipe.recipe_id }}">
+        <div class="card bg-light m-3 w-100">
             <form action='/delete-recipe' method='POST'>
                 <div class="card-header">
-                    <button aria-label="Delete recipe" type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">&times;</button>
+                    <div class="row d-flex">
+                        <div class="col-1"></div>
+                        <div class="col-10 d-flex">
+                            <h5>{{ recipe.recipe.recipe_name }}</h5>
+                        </div>
+                        <div class="col-1 d-flex align-items-center w-100">
+                        <button type="button" class="btn btn-outline-primary w-100" d-flex justify-content-center align-items-center" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">&times;</button>
+                        </div>
+                        <div class="col-1"></div>
+                    </div>
                 </div>
-                <div class="card-body">           
-                    <h3>{{ recipe.recipe.recipe_name }}</h3><br>
+                <div class="card-body d-flex flex-column align-items-center">  
                         <a href="{{ recipe.recipe.url }}">
-                            <img id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}"><br>
+                            <img class="userrecipe w-100" id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}" data-toggle="tooltip" title="Click for recipe."><br>
                         </a>
                     <div class="stars">
                       <input type="radio" id="{{ recipe.recipe.recipe_id }}-5" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="5" /><label for="{{ recipe.recipe.recipe_id }}-5"></label>
@@ -85,6 +100,7 @@
                 </div>
             </form>
         </div>
+      </div>
       {% endfor %}
     </div>
 {% else %}
@@ -93,9 +109,6 @@
 <hr>
 <form action="/clear-meals" method="POST">
     <input type="submit" value="Start Fresh">
-</form>
-<form action="/logout" method="POST">
-    <input type="submit" value="Logout">
 </form>
 
 <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -131,4 +144,5 @@
 <div class="text-center">
     <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalLoginForm">Create a Meal Plan!</a>
 </div>
+
 {% endblock %}
