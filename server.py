@@ -11,7 +11,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 
 from mealplan_db import (get_user, create_new_user,
                          get_random_highest_rated_recipes, get_active_user_recipes, create_user_recipe,
-                         upsert_score, mark_meal_made, get_all_recipes, get_user_scores, delete_user_recipe)
+                         upsert_score, mark_meal_made, get_all_recipes, get_user_scores, delete_user_recipe, 
+                         clear_recipes)
 from mealplan_recipes import get_random_sampling_of_diverse_recipes
 from model import connect_to_db
 

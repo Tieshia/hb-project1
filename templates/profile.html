@@ -28,10 +28,11 @@
                 </a>
                 <div class="carousel-caption d-none d-md-block">
                     <h2 style="color: white; font-weight: bolder;">{{ recipe.recipe_name }}</h2><br>
+                        <input type="checkbox" name="recipes" id="{{ recipe.recipe_id }}" value="{{ recipe.recipe_id }}" class="css-checkbox">
+                        <label for="{{ recipe.recipe_id }}" class="css-label"></label>
                     {% for i in range(score) %}
                     <span class="fa fa-star checked"></span>
                     {% endfor %}
-                    <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}">
                 </div>
             </div>
             {% else %}
@@ -41,10 +42,12 @@
                 </a>
                 <div class="carousel-caption d-none d-md-block">
                     <h2 style="color: white; font-weight: bolder;">{{ recipe.recipe_name }}</h2><br>
+                        <input type="checkbox" name="recipes" id="{{ recipe.recipe_id }}" value="{{ recipe.recipe_id }}" class="css-checkbox">
+                        <label for="{{ recipe.recipe_id }}" class="css-label"></label>
                     {% for i in range(score) %}
                     <span class="fa fa-star checked"></span>
                     {% endfor %}
-                    <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}">
+                    <!-- <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"> -->
                 </div>
             </div>
             {% endif %}
@@ -80,7 +83,7 @@
                             <h5>{{ recipe.recipe.recipe_name }}</h5>
                         </div>
                         <div class="col-1 d-flex align-items-center w-100">
-                        <button type="submit" class="btn btn-outline-primary w-100" d-flex justify-content-center align-items-center" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">&times;</button>
+                        <button type="submit" class="btn btn-outline-primary btn-sm" d-flex text-center" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">&times;</button>
                         </div>
                         <div class="col-1"></div>
                     </div>
@@ -142,7 +145,7 @@
 </div>
 
 <div class="text-center">
-    <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalLoginForm">Create a Meal Plan!</a>
+    <a href="" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modalLoginForm">Create a Meal Plan!</a>
 </div>
 
 {% endblock %}
