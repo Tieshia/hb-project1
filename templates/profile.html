@@ -5,6 +5,7 @@
 <hr>
 <h2>Recommended Recipes for You:</h2>
 <div class="container carousel-container d-none d-sm-block">
+  <form action='/check-meal' method='POST'>
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
     {% for tuple in highest %}
@@ -27,6 +28,7 @@
                     {% for i in range(score) %}
                     <span class="fa fa-star checked"></span>
                     {% endfor %}
+                    <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}">
                 </div>
             </div>
             {% else %}
@@ -39,6 +41,7 @@
                     {% for i in range(score) %}
                     <span class="fa fa-star checked"></span>
                     {% endfor %}
+                    <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}">
                 </div>
             </div>
             {% endif %}
@@ -53,22 +56,9 @@
       <span class="sr-only">Next</span>
     </a>
   </div>
+  <input type="submit" value="Add to meal plan!">
+  </form>
 </div>
-<form action='/check-meal' method='POST'>
-    {% for score, recipe in highest %}
-    <div>
-        <h3>{{ recipe.recipe_name }}</h3><br>
-        <a href="{{ recipe.url }}">
-            <img src="{{ recipe.image_url }}">
-        </a><br>
-        {% for i in range(score) %}
-        <span class="fa fa-star checked"></span>
-        {% endfor %}
-        <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"><br>
-    </div>
-    {% endfor %}
-    <input type="submit" value="Add to meal plan!">
-</form>
 <hr>
 {% if recipes %}
 <h2>Current Meal Plan</h2>
