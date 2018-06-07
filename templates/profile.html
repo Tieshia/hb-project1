@@ -64,9 +64,12 @@
 <h2>Current Meal Plan</h2>
     <div id="recipes-list" class="row">
       {% for recipe in recipes %}
-          <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4 recipes" data-id="{{ recipe.recipe.recipe_id }}">
+        <div class="card border-primary mb-3 recipes" data-id="{{ recipe.recipe.recipe_id }}" style="max-width: 20rem;">
             <form action='/delete-recipe' method='POST'>
-                <button aria-label="Close Account Info Modal Box" type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">&times;</button>
+                <div class="card-header">
+                    <button aria-label="Delete recipe" type="submit" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">&times;</button>
+                </div>
+                <div class="card-body">           
                     <h3>{{ recipe.recipe.recipe_name }}</h3><br>
                         <a href="{{ recipe.recipe.url }}">
                             <img id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}"><br>
@@ -79,8 +82,9 @@
                       <input type="radio" id="{{ recipe.recipe.recipe_id }}-1" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="1" /><label for="{{ recipe.recipe.recipe_id }}-1"></label>
                       <input type="radio" id="{{ recipe.recipe.recipe_id }}-0" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="0" class="star-cb-clear" />
                     </div>
+                </div>
             </form>
-          </div>
+        </div>
       {% endfor %}
     </div>
 {% else %}

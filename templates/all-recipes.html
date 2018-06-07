@@ -4,16 +4,22 @@
 <h1>Recipes</h1>
 
 <form action="/check-meal" method='POST'>
-{% for recipe in recipes %}
-    <div>
-        <h3>{{ recipe.recipe_name }}</h3><br>
-        <a href="{{ recipe.url }}">
-            <img src="{{ recipe.image_url }}">
-        </a>
-        <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"> 
-        <br>
-    </div>
+    <div id="recipes-list" class="row">
+        {% for recipe in recipes %}
+        <div class="card border-primary mb-3 recipes" data-id="{{ recipe.recipe_id }}" style="max-width: 20rem;">
+            <div class="card-header">
+                    <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}">
+            </div>
+            <div class="card-body">  
+                <h3>{{ recipe.recipe_name }}</h3><br>
+                <a href="{{ recipe.url }}">
+                    <img src="{{ recipe.image_url }}">
+                </a>
+            </div>
+        </div>
 {% endfor %}
+    </div>
     <input type="submit" name="Add to meal plan!">
 </form>
+
 {% endblock %}
