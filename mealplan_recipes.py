@@ -4,6 +4,7 @@ from model import connect_to_db, db, FoodType, Recipe, Ingredient
 import requests
 import json
 import os
+from random import choice
 from mealplan_db import (create_recipe, get_recipe_ingredient, get_ingredient,
                          create_recipe_ingredient, add_ingredient, standardize_ingredient_name,
                          get_recipe_by_url)
