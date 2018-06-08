@@ -156,7 +156,7 @@
 /* RECOMMENDED RECIPES*/
 .recommended {
   filter: brightness(50%);
-  opacity: 0.75;
+  opacity: 0.50;
   border-radius: 50%;
 }
 
@@ -180,6 +180,7 @@ input[type=checkbox].css-checkbox {
               font-size:15px;
               vertical-align:middle;
               cursor:pointer;
+              zoom: 1.5;
 
             }
 
