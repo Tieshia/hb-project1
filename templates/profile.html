@@ -126,7 +126,7 @@
                 </button>
             </div>
             <div class="modal-body mx-3">
-                <form>
+                <form class="profile-form" action="/plan-meal" method='POST'>
                   <fieldset>
                     <div class="row">
                     <div class="col-sm-6">
@@ -149,23 +149,22 @@
                         
                     </div> -->
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
                   </fieldset>
                 </form>
-                    <form class="profile-form" action="/plan-meal" method='POST'>
-                        <input type="text" name="ingredients" multiple required="">
-                        <select name="types" multiple required>
-                            <option value="Dairy">Dairy</option>
-                            <option value="Proteins">Proteins</option>
-                            <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option>
-                            <option value="Produce">Produce</option>
-                            <option value="Nuts and Seeds">Nuts and Seeds</option>
-                            <option value="Grains and Pasta">Grains and Pasta</option>
-                        </select>
+                    <!-- <form class="profile-form" action="/plan-meal" method='POST'> -->
+                        <!-- <input type="text" name="ingredients" multiple required=""> -->
+                        <!-- <select name="types" multiple required> -->
+                            <!-- <option value="Dairy">Dairy</option> -->
+                            <!-- <option value="Proteins">Proteins</option> -->
+                            <!-- <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option> -->
+                            <!-- <option value="Produce">Produce</option> -->
+                            <!-- <option value="Nuts and Seeds">Nuts and Seeds</option> -->
+                            <!-- <option value="Grains and Pasta">Grains and Pasta</option> -->
+                        <!-- </select> -->
                         <!-- <button type="button" class="new-button">+</button><br> -->
-            </div> <!-- Modal div ender -->
+            </div> <!-- Modal body div ender -->
             <div class="modal-footer d-flex justify-content-center">
-                <input type="submit" class='submit-button'>
+                <button type="submit" class='btn btn-primary submit-button'>Submit</button>
                 </form>
             </div>
         </div>
