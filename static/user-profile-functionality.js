@@ -21,7 +21,6 @@
     function showRecipeScore(result) {
         let recipe_id = $("input:checked").data("id");
         $(`img#${recipe_id}`).css({"opacity": 0.5, "filter": "grayscale(100%)"});
-        alert(result);
     }
 
     function passScoreValue(evt) {

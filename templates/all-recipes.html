@@ -16,7 +16,6 @@
                         <div class="col-2 d-flex">
                         <input type="checkbox" name="recipes" id="{{ recipe.recipe_id }}" value="{{ recipe.recipe_id }}" class="css-checkbox">
                         <label for="{{ recipe.recipe_id }}" class="css-label"></label>
-                    <!-- <input type="checkbox" name="recipes" value="{{ recipe.recipe_id }}"> -->
                         </div>
                     </div>
                 </div>
@@ -30,7 +29,9 @@
         </div>
         {% endfor %}
     </div>
-    <input type="submit" name="Add to meal plan!">
+    <div class="row d-flex justify-content-center">
+    <button type="submit" class="btn btn-success btn-lg">Add to meal plan!</button>
+    </div>
 </form>
 
 {% endblock %}
