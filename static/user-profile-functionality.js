@@ -3,10 +3,10 @@
     function addRow(evt) {
         $('.new-button').remove();
         // $('.submit-button').remove()
-        $('.profile-form').append('<input type="text" name="ingredients"><select name="types"> <option value="Dairy">Dairy</option><option value="Proteins">Proteins</option> <option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option> <option value="Produce">Produce</option> <option value="Nuts and Seeds">Nuts and Seeds</option> <option value="Grains and Pasta">Grains and Pasta</option> </select><button type="button" class="new-button">+</button><br> <input type="submit" class="submit-button">');
+        $('.profile-form').append('<fieldset><div class="row"><div class="col-sm-6"><div class="form-group"><input type="text" class="form-control" id="ingredient" placeholder="Enter ingredient"></div></div><div class="col-sm-6 d-flex align-items-baseline"><select class="form-control" id="foodgroup"><option value="Dairy">Dairy</option><option value="Proteins">Proteins</option><option value="Soups, Sauces, and Gravies">Soups, Sauces, and Gravies</option><option value="Produce">Produce</option><option value="Nuts and Seeds">Nuts and Seeds</option><option value="Grains and Pasta">Grains and Pasta</option></select><button type="button" class="btn btn-outline-primary btn-sm new-button">+</button></div></div></fieldset>');
     }
 //  Add event listener to profile form, .on'click', pass middle argument that is name of new class, callback().
-    $('button').on('click', addRow);
+    $('.new-button').on('click', addRow);
     $('.profile-form').on('click', '.new-button', addRow);
 
 // For star rating
