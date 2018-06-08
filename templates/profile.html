@@ -25,7 +25,7 @@
             {% if loop.first %}
             <div class="carousel-item active">
                 <a href="{{ recipe.url }}">
-                    <img class="recommended d-block w-100" src="{{ recipe.image_url }}">
+                    <img class="recommended d-block w-100" src="{{ recipe.image_url }}" data-toggle="tooltip" title="Click for recipe.">
                 </a>
                 <div class="carousel-caption d-none d-md-block">
                     <h3 style="color: white; font-weight: bolder;">{{ recipe.recipe_name }}</h3><br>
@@ -40,7 +40,7 @@
             {% else %}
             <div class="carousel-item">
                 <a href="{{ recipe.url }}">
-                    <img class="recommended d-block w-100" src="{{ recipe.image_url }}">
+                    <img class="recommended d-block w-100" src="{{ recipe.image_url }}" data-toggle="tooltip" title="Click for recipe.">
                 </a>
                 <div class="carousel-caption d-none d-md-block">
                     <h3 style="color: white; font-weight: bolder;">{{ recipe.recipe_name }}</h3><br>
@@ -88,15 +88,15 @@
                         <div class="col-10 d-flex">
                             <h5>{{ recipe.recipe.recipe_name }}</h5>
                         </div>
-                        <div class="col-1 d-flex align-items-center w-100">
-                        <button type="submit" class="btn btn-outline-primary btn-sm" d-flex text-center" name="recipe_id" value="{{ recipe.recipe.recipe_id }}">&times;</button>
+                        <div class="col-1 d-flex align-items-start w-100">
+                        <button type="submit" class="btn btn-outline-primary btn-sm" d-flex text-center" name="recipe_id" value="{{ recipe.recipe.recipe_id }}" data-toggle="tooltip" title="Delete recipe.">&times;</button>
                         </div>
                         <div class="col-1"></div>
                     </div>
                 </div>
                 <div class="card-body d-flex flex-column align-items-center">  
                         <a href="{{ recipe.recipe.url }}">
-                            <img class="userrecipe w-100" id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}" data-toggle="tooltip" title="Click for recipe."><br>
+                            <img class="recipeimg w-100" id="{{ recipe.recipe.recipe_id }}" src="{{ recipe.recipe.image_url }}" data-toggle="tooltip" title="Click for recipe."><br>
                         </a>
                     <div class="stars">
                       <input type="radio" id="{{ recipe.recipe.recipe_id }}-5" data-id="{{ recipe.recipe.recipe_id }}" name="rating" value="5" /><label for="{{ recipe.recipe.recipe_id }}-5"></label>
