@@ -36,14 +36,17 @@ def create_user_recipe(recipe_id, user_id):  # -- TESTED
 
     user_recipe = UserRecipe.query.filter((UserRecipe.recipe_id == recipe_id) &
                                           (UserRecipe.user_id == user_id)).first()
-
+    print "User recipe:", user_recipe
     if user_recipe:
         user_recipe.active = True
+        print "Changed recipe to active"
     else:
         new_user_recipe = UserRecipe(recipe_id=recipe_id, times_cooked=0,
                                      active=True, user_id=user_id)
         db.session.add(new_user_recipe)
+        print "Creted new recipe"
     db.session.commit()
+    print "Saved changes"
 
 
 def get_ingredient(ingredient_name):  # -- TESTED

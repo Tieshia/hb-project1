@@ -162,6 +162,10 @@
 
 .recipeimg  {
   border-radius: 15%;
+  opacity: 0.5;
+}
+
+.recipimg:hover {
   opacity: 0.75;
 }
 

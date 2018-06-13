@@ -182,6 +182,7 @@ def add_recipe_to_plan():
     """Pass selected meals into UserRecipes."""
 
     selected_recipes = request.form.getlist('recipes')
+    print "Selected recipe ids:", selected_recipes
     if selected_recipes:
         for recipe_id in selected_recipes:
             recipe_id = int(recipe_id)
