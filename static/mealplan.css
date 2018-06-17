@@ -152,13 +152,13 @@
 /* RECOMMENDED RECIPES*/
 .recommended {
   filter: brightness(50%);
-  opacity: 0.50;
+  opacity: 0.75;
   border-radius: 50%;
 }
 
 .recipeimg  {
   border-radius: 15%;
-  opacity: 0.5;
+  opacity: 0.75;
 }
 
 .recipimg:hover {
