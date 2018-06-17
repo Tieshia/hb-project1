@@ -34,9 +34,10 @@ Meal-of-Fortune is an app built on a Flask server with a PostgreSQL database, wi
 ## Features
 
 
-
+![alt text](https://github.com/Tieshia/hb-project1/blob/master/static/images/recipe_diversification.gif "Meal-of-Fortune Recipe Diversification Algorithm")
 - **Recipe diversification algorithm:** When the user enters ingredients to their meal plan, the application creates various combinations of these ingredients and passes them to the Edamam API using a recipe diversification algorithm, providing the user a greater variety of recipes from which to choose.
  
+
 ![alt text](https://github.com/Tieshia/hb-project1/blob/master/static/images/recipe_recommendations.gif "Meal-of-Fortune Recipe Recommendation Engine")
 
 - **Recipe recommendation engine:** Meal-of-Fortune features a recipe recommendation engine that uses a series of SQLAlchemy queries to determine the best recipes based on user ratings, automatically suggesting meals to a user without their having to create a new meal plan.
