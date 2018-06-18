@@ -1,3 +1,5 @@
+[![Coverage Status](https://coveralls.io/repos/github/Tieshia/hb-project1/badge.svg?branch=master)](https://coveralls.io/github/Tieshia/hb-project1?branch=master)
+
 # Meal-of-Fortune
 
 ## Summary
