@@ -19,7 +19,6 @@ Jinja2==2.7.3
 MarkupSafe==0.23
 more-itertools==4.2.0
 nltk==3.3
-pkg-resources==0.0.0
 pluggy==0.6.0
 psycopg2==2.6.1
 py==1.5.3
