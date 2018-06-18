@@ -47,7 +47,7 @@ class FlaskTestsBasic(TestCase):
         self.assertIn('Welcome', result.data)
         self.assertIn('Log In', result.data)
         self.assertIn('Register', result.data)
-        self.assertNotIn('Profile', result.data)
+        self.assertNotIn('User Profile', result.data)
 
     def test_login(self):
         """Test log in page."""
@@ -253,7 +253,7 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
         self.assertIn('http://www.thekitchn.com/recipe-chicken-broccoli-alfredo-229203',
                       result.data)
         self.assertIn('<img', result.data)
-        self.assertIn('<h3>', result.data)
+        self.assertIn('</h3>', result.data)
         self.assertNotIn('Apple Fritter', result.data)
 
     def test_check_meal(self):
