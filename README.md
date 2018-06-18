@@ -78,4 +78,4 @@ Meal-of-Fortune is an app built on a Flask server with a PostgreSQL database, wi
 - **Charts of user activity:** Display users ingredients most typically used, general recipe ratings and frequency made.
 
 ## License
-[Lic](https://github.com/Tieshia/hb-project1/blob/master/LICENSE.txt)
+ GNU General Public [License](https://github.com/Tieshia/hb-project1/blob/master/LICENSE.txt) v3.0
