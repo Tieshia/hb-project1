@@ -76,3 +76,6 @@ Meal-of-Fortune is an app built on a Flask server with a PostgreSQL database, wi
 - **Updated recipe recommendation engine:** Replacing current system with engine that uses collaborative filtering to recommend recipes based on user ratings as well as ingredients used.
 - **Update recipe diversification algorithm:** Adding ability to query recipe based on various types of produce provided.
 - **Charts of user activity:** Display users ingredients most typically used, general recipe ratings and frequency made.
+
+## License
+[Lic](https://github.com/Tieshia/hb-project1/blob/master/LICENSE.txt)
