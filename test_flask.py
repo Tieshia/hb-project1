@@ -91,9 +91,9 @@ class FlaskRouteTestswDatabase(TestCase):
         db.create_all()
         example_data()
 
-        # Make mock
+        # Make mock response for highest rated recipe
         def _mock_get_random_highest_rated_recipes():
-            """Makes mock API return result."""
+            """Makes mock return result for highest rated recipe."""
             recipe = get_recipe_by_url('test1.com')
             score = 4
             return [(score, recipe)]
