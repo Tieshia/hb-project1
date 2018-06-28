@@ -69,7 +69,7 @@ def get_EDAMAM_recipes_from_ingredients(ingredients):
     """Pass ingredients into EDAMAM API and get response."""
 
     params = {"app_id": os.environ['EDAMAM_SECRET_ID'],
-              "app_key": os.environ['EDAMAM_SECRET_KEY'],
+              "app_key": os.environ.get('EDAMAM_SECRET_KEY'),
               "q": ingredients}
     results = get_recipes(params)
     return results
