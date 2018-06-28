@@ -12,13 +12,13 @@ python:
 services:
   - postgresql
 
-# Create a database for my application
-before_install:
-  -psql -U postgres -c 'create database testdb;' 
-
 # command to install dependencies
 install:
   - pip install -r static/requirements.txt
+
+# Create a database for my application
+before_script:
+  -psql -c 'create database testdb;' -U postgres 
 
 # command to run tests
 script:
