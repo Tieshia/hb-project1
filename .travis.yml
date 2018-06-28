@@ -11,6 +11,15 @@ python:
 # command to install dependencies
 install:
   - pip install -r static/requirements.txt
+
+# Start PostgreSQL
+services:
+  - postgresql
+
+# Create a database for my application
+before_script:
+  -psql -c 'create database travis_ci_test;' -U postgres
+
 # command to run tests
 script:
   - pytest # or py.test for Python versions 3.5 and below
