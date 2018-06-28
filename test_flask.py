@@ -26,6 +26,7 @@ import server
 import bcrypt
 from flask import session
 from mealplan_db import get_recipe_by_url
+import mealplan_recipes
 
 
 class FlaskTestsBasic(TestCase):
@@ -242,7 +243,7 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
                 data = json.load(json_file)
             return data['hits']
 
-        server.get_recipes = _mock_get_recipes
+        mealplan_recipes.get_recipes = _mock_get_recipes
 
         result = self.client.post('/plan-meal', data={'app_id': os.environ.get('EDAMAM_SECRET_ID'),
                                                       'app_key': os.environ.get('EDAMAM_SECRET_KEY'),
