@@ -244,8 +244,8 @@ class FlaskRouteTestswDatabaseandSession(TestCase):
 
         server.get_recipes = _mock_get_recipes
 
-        result = self.client.post('/plan-meal', data={'app_id': os.environ['EDAMAM_SECRET_ID'],
-                                                      'app_key': os.environ['EDAMAM_SECRET_KEY'],
+        result = self.client.post('/plan-meal', data={'app_id': os.environ.get('EDAMAM_SECRET_ID'),
+                                                      'app_key': os.environ.get('EDAMAM_SECRET_KEY'),
                                                       'ingredients': ['chicken', 'broccoli'],
                                                       'types': ['Proteins', 'Produce']})
 
