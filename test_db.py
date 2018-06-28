@@ -33,12 +33,6 @@ class FlaskTestsDatabase(TestCase):
         # Get the Flask test client.
         self.client = app.test_client()
 
-        # Make mock secret key
-        # def _mock_secret_key():
-        #     """Makes mock secret key."""
-        #     return "SUPER_SECRET_KEY"
-
-        # app.secret_key = _mock_secret_key
         app.config['TESTING'] = True
 
         # Connect to test database
