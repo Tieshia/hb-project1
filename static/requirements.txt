@@ -21,7 +21,7 @@ more-itertools==4.2.0
 nltk==3.3
 pluggy==0.6.0
 psycopg2==2.7.5
-py==1.5.3
+py==1.10.0
 pycparser==2.18
 pytest==3.6.0
 python-dateutil==2.7.3
